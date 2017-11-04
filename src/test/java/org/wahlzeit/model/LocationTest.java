@@ -2,8 +2,7 @@ package org.wahlzeit.model;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class LocationTest {
 
@@ -31,11 +30,11 @@ public class LocationTest {
 
         // Member check
         assertTrue(loc0.coordinate.isEqual(coord1));
-        assertTrue(loc0.coordinate.equals(coord1));
+        assertEquals(loc0.coordinate, coord1);
         assertTrue(loc1.coordinate.isEqual(coord0));
-        assertTrue(loc1.coordinate.equals(coord0));
+        assertEquals(loc1.coordinate, coord0);
         assertFalse(loc2.coordinate.isEqual(coord0));
-        assertFalse(loc2.coordinate.equals(coord1));
+        assertNotEquals(loc2.coordinate, coord1);
 
         // Exchange member + check
         loc0.coordinate = coord2;
@@ -43,7 +42,7 @@ public class LocationTest {
         assertTrue(loc2.coordinate == coord1);  // always true
         assertTrue(loc2.coordinate != coord2);  // always true
         assertTrue(loc2.coordinate.isEqual(coord1));
-        assertTrue(loc2.coordinate.equals(coord1));
+        assertEquals(loc2.coordinate, coord1);
         assertFalse(loc1.coordinate.isEqual(coord2));
     }
 }

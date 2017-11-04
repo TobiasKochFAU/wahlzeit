@@ -2,9 +2,7 @@ package org.wahlzeit.model;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class CoordinateTest {
     /**
@@ -22,23 +20,30 @@ public class CoordinateTest {
 
         // Act + assert
         assertTrue(coord0.isEqual(coord0));
-        assertTrue(coord0.equals(coord0));  // always true
+        assertEquals(coord0, coord0);
+        assertEquals(coord0.hashCode(), coord0.hashCode());
         assertTrue(coord0.isEqual(coord1));
-        assertTrue(coord0.equals(coord1));
+        assertEquals(coord0, coord1);
+        assertEquals(coord0.hashCode(), coord1.hashCode());
         assertTrue(coord4.isEqual(coord4));
-        assertTrue(coord5.equals(coord5));  // always true
+        assertEquals(coord5, coord5);
 
+        assertFalse(coord1.isEqual(null));
         assertFalse(coord1.isEqual(coord2));
-        assertFalse(coord1.equals(coord2));
-        assertFalse(coord2.equals(5));
-        assertFalse(coord2.equals(null));
+        assertNotEquals(coord1, coord2);
+        assertNotEquals(coord1.hashCode(), coord2.hashCode());
+        assertNotEquals(coord2, 5);
+        assertNotEquals(coord2, null);
 
-        assertFalse(coord0.equals(coord5));
+        assertNotEquals(coord0, coord5);
+        assertNotEquals(coord0.hashCode(), coord5.hashCode());
         assertFalse(coord0.isEqual(coord3));
-        assertFalse(coord1.equals(coord3));
+        assertNotEquals(coord1, coord3);
+        assertNotEquals(coord1.hashCode(), coord3.hashCode());
         assertFalse(coord1.isEqual(coord4));
         assertFalse(coord2.isEqual(coord5));
-        assertFalse(coord2.equals(coord4));
+        assertNotEquals(coord2, coord4);
+        assertNotEquals(coord2.hashCode(), coord4.hashCode());
     }
 
     /**
@@ -57,13 +62,13 @@ public class CoordinateTest {
                               + Math.pow(2 - 4, 2));
 
         // Act + Assert
-        assertEquals(0, coord0.getDistance(coord1), coord1.getDistance(coord0));
-        assertEquals(0.0, coord0.getDistance(coord1), coord1.getDistance(coord0));
-        assertEquals(0.0f, coord0.getDistance(coord1), coord1.getDistance(coord0));
+        assertEquals(coord0.getDistance(coord1), 0, 1e-7);
+        assertEquals(coord1.getDistance(coord0), 0, 1e-7);
+        assertEquals(coord0.getDistance(coord1), coord1.getDistance(coord0), 1e-7);
 
-        assertFalse(coord1.getDistance(coord2) == 0);
-        assertTrue(Math.abs(coord1.getDistance(coord2) - 3.4641016) < 1e-7);
-        assertTrue(coord1.getDistance(coord2) == dist);
-        assertTrue(coord3.getDistance(coord4) == 3);
+        assertNotEquals(coord1.getDistance(coord2), 0);
+        assertEquals(coord1.getDistance(coord2), 3.4641016, 1e-7);
+        assertEquals(coord2.getDistance(coord1), dist, 1e-7);
+        assertEquals(coord3.getDistance(coord4), 3, 1e-7);
     }
 }
