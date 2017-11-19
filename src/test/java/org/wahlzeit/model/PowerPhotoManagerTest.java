@@ -26,10 +26,10 @@ public class PowerPhotoManagerTest {
      */
     @Test()
     public void testAddPhotos() {
-        PowerPhoto p1 = new PowerPhoto("plant1", "beer", 2012, 5.2d, 2017);
+        PowerPhoto p1 = new PowerPhoto();
         PhotoId id = new PhotoId(1337);
-        PowerPhoto p2 = new PowerPhoto(id, "plant2", "beer", 2014, 2.5d, 2017);
-        PowerPhoto p3 = new PowerPhoto(id, "plant3", "wine", 2014, 42.42d, 2042);
+        PowerPhoto p2 = new PowerPhoto(id);
+        PowerPhoto p3 = new PowerPhoto(id);
         PhotoManager manager = PowerPhotoManager.getInstance();
 
         assertNotNull(manager);

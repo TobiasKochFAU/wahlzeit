@@ -20,6 +20,8 @@
 
 package org.wahlzeit.model;
 
+import com.google.appengine.api.images.Image;
+
 import java.util.logging.Logger;
 
 public class PowerPhotoManager extends PhotoManager {
@@ -30,5 +32,29 @@ public class PowerPhotoManager extends PhotoManager {
 
     public PowerPhotoManager() {
         super();
+    }
+
+    /**
+     *
+     */
+    @Override
+    public PowerPhoto getPhotoFromId(PhotoId id) {
+        return (PowerPhoto) super.getPhotoFromId(id);
+    }
+
+    /**
+     *
+     */
+    @Override
+    public PowerPhoto getVisiblePhoto(PhotoFilter filter) {
+        return (PowerPhoto) super.getVisiblePhoto(filter);
+    }
+
+    /**
+     *
+     */
+    @Override
+    public PowerPhoto createPhoto(String filename, Image uploadedImage) throws Exception {
+        return (PowerPhoto) super.createPhoto(filename, uploadedImage);
     }
 }

@@ -24,53 +24,62 @@ import com.googlecode.objectify.annotation.Subclass;
 
 @Subclass
 public class PowerPhoto extends Photo {
+
     /**
      * attributes to describe a power plant
      * this could be an extra class with specific subclasses
      * maybe I will do this later
      */
-    protected String name = ""; // no setter, name should not changed
-    protected String type = ""; // no setter, type should not change
-    protected int yearStartUp = 0;  // no setter, yearStartUp should not change
+    protected String name = "";
+    protected String type = "";
+    protected int yearStartUp = 0;
     protected double capacitySinceStart = 0.0d; // in GWh, capacity gained till year yearCapacity
     protected int yearCapacity = 0; // the year until the capacity was measured
 
-    public PowerPhoto(String name, String type, int yearStartUp, double capacitySinceStart, int yearCapacity) {
+    public PowerPhoto() {
         super();
-        this.initialize(name, type, yearStartUp, capacitySinceStart, yearCapacity);
     }
 
-    public PowerPhoto(PhotoId myId, String name, String type, int yearStartUp, double capacitySinceStart,
-                      int yearCapacity) {
+    public PowerPhoto(PhotoId myId) {
         super(myId);
-        this.initialize(name, type, yearStartUp, capacitySinceStart, yearCapacity);
-    }
-
-    /**
-     * Sets the attributes.
-     * @param name  power plant name
-     * @param type  power plant type
-     * @param yearStartUp   power plant start-up
-     * @param capacitySinceStart    capacity measured since start until yearCapacity
-     * @param yearCapacity  year of measured capacity
-     */
-    protected void initialize(String name, String type, int yearStartUp, double capacitySinceStart, int yearCapacity) {
-        this.name = name;
-        this.type = type;
-        this.yearStartUp = yearStartUp;
-        this.setCapacitySinceStart(capacitySinceStart, yearCapacity);
     }
 
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getType() {
         return type;
     }
 
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public int getYearStartUp() {
+        return yearStartUp;
+    }
+
+    public void setYearStartUp(int yearStartUp) {
+        this.yearStartUp = yearStartUp;
+    }
+
     public double getCapacitySinceStart() {
         return capacitySinceStart;
+    }
+
+    /**
+     * Capacity has to be set together with related year.
+     * @param capacitySinceStart    capacity measured since start until yearCapacity
+     * @param yearCapacity      year of measured capacity
+     */
+    public void setCapacitySinceStart(double capacitySinceStart, int yearCapacity) {
+        this.setYearCapacity(yearCapacity);
+        this.setCapacitySinceStart(capacitySinceStart);
     }
 
     /**
@@ -79,10 +88,6 @@ public class PowerPhoto extends Photo {
      */
     private void setCapacitySinceStart(double capacitySinceStart) {
         this.capacitySinceStart = capacitySinceStart;
-    }
-
-    public int getYearStartUp() {
-        return yearStartUp;
     }
 
     public int getYearCapacity() {
@@ -100,15 +105,5 @@ public class PowerPhoto extends Photo {
                     "can not be smaller than the plant start up year");
         }
         this.yearCapacity = yearCapacity;
-    }
-
-    /**
-     * Capacity has to be set together with related year.
-     * @param capacitySinceStart    capacity measured since start until yearCapacity
-     * @param yearCapacity      year of measured capacity
-     */
-    public void setCapacitySinceStart(double capacitySinceStart, int yearCapacity) {
-        this.setYearCapacity(yearCapacity);
-        this.setCapacitySinceStart(capacitySinceStart);
     }
 }

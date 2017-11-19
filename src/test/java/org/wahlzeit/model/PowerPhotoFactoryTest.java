@@ -21,10 +21,10 @@ public class PowerPhotoFactoryTest {
 
         assertNotNull(factory);
 
-        PowerPhoto p1 = factory.createPowerPhoto("plant1", "beer", 2012, 5.2d, 2017);
+        PowerPhoto p1 = factory.createPhoto();
         PhotoId id = new PhotoId(1337);
-        PowerPhoto p2 = factory.createPowerPhoto(id, "plant2", "beer", 2014, 2.5d, 2017);
-        PowerPhoto p3 = factory.createPowerPhoto(id, "plant3", "wine", 2014, 42.42d, 2042);
+        PowerPhoto p2 = factory.createPhoto(id);
+        PowerPhoto p3 = factory.createPhoto(id);
 
         assertNotNull(p1);
         assertNotNull(p2);

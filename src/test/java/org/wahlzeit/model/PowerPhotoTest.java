@@ -26,10 +26,25 @@ public class PowerPhotoTest {
      */
     @Test
     public void testAttributes() {
-        PowerPhoto p1 = new PowerPhoto("plant1", "beer", 2012, 5.2d, 2017);
+        PowerPhoto p1 = new PowerPhoto();
         PhotoId id = new PhotoId(1337);
-        PowerPhoto p2 = new PowerPhoto(id, "plant2", "beer", 2014, 2.5d, 2017);
-        PowerPhoto p3 = new PowerPhoto(id, "plant3", "wine", 2014, 42.42d, 2042);
+        PowerPhoto p2 = new PowerPhoto(id);
+        PowerPhoto p3 = new PowerPhoto(id);
+
+        p1.setName("plant1");
+        p1.setType("beer");
+        p1.setYearStartUp(2012);
+        p1.setCapacitySinceStart(5.2d, 2017);
+
+        p2.setName("plant2");
+        p2.setType("beer");
+        p2.setYearStartUp(2014);
+        p2.setCapacitySinceStart(2.5d, 2017);
+
+        p3.setName("plant3");
+        p3.setType("wine");
+        p3.setYearStartUp(2014);
+        p3.setCapacitySinceStart(42.42d, 2042);
 
         assertNotEquals(p1.getId(), p2.getId());
         assertEquals(p1.getName(), "plant1");
@@ -52,7 +67,12 @@ public class PowerPhotoTest {
      */
     @Test
     public void testException() {
-        PowerPhoto p1 = new PowerPhoto("plant1", "beer", 2012, 5.2d, 2017);
+        PowerPhoto p1 = new PowerPhoto();
+
+        p1.setName("plant1");
+        p1.setType("beer");
+        p1.setYearStartUp(2012);
+        p1.setCapacitySinceStart(5.2d, 2017);
 
         p1.setCapacitySinceStart(7.3, 2018);
         expectedException.expect(IllegalArgumentException.class);

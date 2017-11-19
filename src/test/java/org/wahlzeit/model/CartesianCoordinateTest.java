@@ -1,22 +1,21 @@
 package org.wahlzeit.model;
 
 import org.junit.Test;
-
 import static org.junit.Assert.*;
 
-public class CoordinateTest {
+public class CartesianCoordinateTest {
     /**
      *  Equality tests
      */
     @Test
     public void testEquals() {
         // Arrange
-        Coordinate coord0 = new Coordinate(0, 1, 2);
-        Coordinate coord1 = new Coordinate(0, 1, 2);
-        Coordinate coord2 = new Coordinate(2, 3, 4);
-        Coordinate coord3 = new Coordinate(5.0, 5.1, 5.2);
-        Coordinate coord4 = new Coordinate(5.0, 5.1, 5.2);
-        Coordinate coord5 = new Coordinate(2.3, 3.4, 4.5);
+        CartesianCoordinate coord0 = new CartesianCoordinate(0, 1, 2);
+        CartesianCoordinate coord1 = new CartesianCoordinate(0, 1, 2);
+        CartesianCoordinate coord2 = new CartesianCoordinate(2, 3, 4);
+        CartesianCoordinate coord3 = new CartesianCoordinate(5.0, 5.1, 5.2);
+        CartesianCoordinate coord4 = new CartesianCoordinate(5.0, 5.1, 5.2);
+        CartesianCoordinate coord5 = new CartesianCoordinate(2.3, 3.4, 4.5);
 
         // Act + assert
         assertTrue(coord0.isEqual(coord0));
@@ -52,11 +51,11 @@ public class CoordinateTest {
     @Test
     public void testDistance() {
         // Arrange
-        Coordinate coord0 = new Coordinate(0, 1, 2);
-        Coordinate coord1 = new Coordinate(0, 1, 2);
-        Coordinate coord2 = new Coordinate(2, 3, 4);
-        Coordinate coord3 = new Coordinate(4, 1, -2);
-        Coordinate coord4 = new Coordinate(2, 3, -1);
+        CartesianCoordinate coord0 = new CartesianCoordinate(0, 1, 2);
+        CartesianCoordinate coord1 = new CartesianCoordinate(0, 1, 2);
+        CartesianCoordinate coord2 = new CartesianCoordinate(2, 3, 4);
+        CartesianCoordinate coord3 = new CartesianCoordinate(4, 1, -2);
+        CartesianCoordinate coord4 = new CartesianCoordinate(2, 3, -1);
         double dist = Math.sqrt(Math.pow(0 - 2, 2)
                               + Math.pow(1 - 3, 2)
                               + Math.pow(2 - 4, 2));

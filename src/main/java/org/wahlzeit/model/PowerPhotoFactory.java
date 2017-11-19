@@ -76,16 +76,16 @@ public class PowerPhotoFactory extends PhotoFactory {
     /**
      * @methodtype factory
      */
-    public PowerPhoto createPowerPhoto(String name, String type, int yearStartUp, double capacitySinceStart,
-                                       int yearCapacity) {
-        return new PowerPhoto(name, type, yearStartUp, capacitySinceStart, yearCapacity);
+    @Override
+    public PowerPhoto createPhoto() {
+        return new PowerPhoto();
     }
 
     /**
      * Creates a new power photo with the specified id
      */
-    public PowerPhoto createPowerPhoto(PhotoId id, String name, String type, int yearStartUp, double capacitySinceStart,
-                                       int yearCapacity) {
-        return new PowerPhoto(id, name, type, yearStartUp, capacitySinceStart, yearCapacity);
+    @Override
+    public PowerPhoto createPhoto(PhotoId id) {
+        return new PowerPhoto(id);
     }
 }

@@ -33,7 +33,7 @@ public class PhotoFactory {
 	/**
 	 * Hidden singleton instance; needs to be initialized from the outside.
 	 */
-	private static PhotoFactory instance = null;
+	private static PowerPhotoFactory instance = null;
 
 	/**
 	 *
@@ -52,10 +52,11 @@ public class PhotoFactory {
 	/**
 	 * Public singleton access method.
 	 */
-	public static synchronized PhotoFactory getInstance() {
+	public static synchronized PowerPhotoFactory getInstance() {
 		if (instance == null) {
 			log.config(LogBuilder.createSystemMessage().addAction("setting generic PhotoFactory").toString());
-			setInstance(new PhotoFactory());
+			setInstance(new PowerPhotoFactory());
+			// setInstance(new PhotoFactory());
 		}
 
 		return instance;
@@ -64,12 +65,12 @@ public class PhotoFactory {
 	/**
 	 * Method to set the singleton instance of PhotoFactory.
 	 */
-	protected static synchronized void setInstance(PhotoFactory photoFactory) {
+	protected static synchronized void setInstance(PowerPhotoFactory powerPhotoFactory) {
 		if (instance != null) {
 			throw new IllegalStateException("attempt to initalize PhotoFactory twice");
 		}
 
-		instance = photoFactory;
+		instance = powerPhotoFactory;
 	}
 
 	/**

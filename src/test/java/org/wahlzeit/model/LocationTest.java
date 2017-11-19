@@ -12,9 +12,9 @@ public class LocationTest {
     @Test
     public void testMember() {
         // Arrange
-        Coordinate coord0 = new Coordinate(0, 1, 2);
-        Coordinate coord1 = new Coordinate(0, 1, 2);
-        Coordinate coord2 = new Coordinate(2, 3, 4);
+        CartesianCoordinate coord0 = new CartesianCoordinate(0, 1, 2);
+        CartesianCoordinate coord1 = new CartesianCoordinate(0, 1, 2);
+        CartesianCoordinate coord2 = new CartesianCoordinate(2, 3, 4);
         Location loc0 = new Location(coord0);
         Location loc1 = new Location(coord1);
         Location loc2 = new Location(coord2);
