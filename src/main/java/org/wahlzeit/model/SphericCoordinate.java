@@ -49,16 +49,22 @@ public class SphericCoordinate implements Coordinate {
     }
 
     /**
-     * Copy constructor.
+     * Copy constructor. Does a null check.
      * @param coord     Coordinate to copy.
+     * @throws IllegalArgumentException     If coord is null
      */
-    public SphericCoordinate(Coordinate coord) {
+    public SphericCoordinate(Coordinate coord) throws IllegalArgumentException {
+        // null check
+        if (coord == null) {
+            throw new IllegalArgumentException("invalid coordinate");
+        }
+
         SphericCoordinate tmp;
-        if(coord instanceof CartesianCoordinate) {
-            tmp = coord.asSphericCoordinate();
+        if(coord instanceof SphericCoordinate) {
+            tmp = (SphericCoordinate) coord;
         }
         else {
-            tmp = (SphericCoordinate) coord;
+            tmp = coord.asSphericCoordinate();
         }
         this.latitude = tmp.latitude;
         this.longitude = tmp.longitude;
@@ -108,19 +114,11 @@ public class SphericCoordinate implements Coordinate {
      */
     @Override
     public double getDistance(Coordinate coord) {
-        SphericCoordinate tmp;
-        if (coord instanceof CartesianCoordinate) {
-            tmp = coord.asSphericCoordinate();
-        }
-        else {
-            tmp = (SphericCoordinate) coord;
-        }
+        SphericCoordinate tmp = coord.asSphericCoordinate();
 
         // convert to radians
         double radLat1 = Math.toRadians(this.latitude);
-        double radLong1 = Math.toRadians(this.longitude);
         double radLat2 = Math.toRadians(tmp.latitude);
-        double radLong2 = Math.toRadians(tmp.longitude);
 
         // co-/sine computation
         double cosLat1 = Math.cos(radLat1);
@@ -129,7 +127,7 @@ public class SphericCoordinate implements Coordinate {
         double sinLat2 = Math.sin(radLat2);
 
         // delta longitude
-        double deltaLong = Math.abs(radLong1 - radLong2);
+        double deltaLong = Math.abs(Math.toRadians(this.longitude) - Math.toRadians(tmp.longitude));
         double cosDeltaLong = Math.cos(deltaLong);
 
         // set up numerator
@@ -171,18 +169,8 @@ public class SphericCoordinate implements Coordinate {
     @Override
     public boolean isEqual(Coordinate coord) {
         boolean isEqual = false;
-
-        // check coordinate type, do conversion if necessary
-        SphericCoordinate tmp;
-        if (coord instanceof CartesianCoordinate) {
-            tmp = coord.asSphericCoordinate();
-        }
-        else {
-            tmp = (SphericCoordinate) coord;
-        }
-
-        // do null check
-        if (tmp != null) {
+        if (coord != null) {
+            SphericCoordinate tmp = coord.asSphericCoordinate();
             isEqual = this.latitude == tmp.latitude
                    && this.longitude == tmp.longitude;
         }

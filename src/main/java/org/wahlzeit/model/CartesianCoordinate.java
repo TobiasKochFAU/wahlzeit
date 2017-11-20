@@ -48,16 +48,22 @@ public class CartesianCoordinate implements Coordinate {
     }
 
     /**
-     * Copy Constructor.
+     * Copy Constructor. Does a null check.
      * @param coord     Coordinate to copy.
+     * @throws IllegalArgumentException     If coord is null
      */
-    public CartesianCoordinate(Coordinate coord) {
+    public CartesianCoordinate(Coordinate coord) throws IllegalArgumentException {
+        // null check
+        if (coord == null) {
+            throw new IllegalArgumentException("invalid coordinate");
+        }
+
         CartesianCoordinate tmp;
-        if(coord instanceof SphericCoordinate) {
-            tmp = coord.asCartesianCoordinate();
+        if(coord instanceof CartesianCoordinate) {
+            tmp = (CartesianCoordinate) coord;
         }
         else {
-            tmp = (CartesianCoordinate) coord;
+            tmp = coord.asCartesianCoordinate();
         }
         this.x = tmp.x;
         this.y = tmp.y;
@@ -104,13 +110,7 @@ public class CartesianCoordinate implements Coordinate {
      */
     @Override
     public double getDistance(Coordinate coord) {
-        CartesianCoordinate tmp;
-        if (coord instanceof SphericCoordinate) {
-            tmp = coord.asCartesianCoordinate();
-        }
-        else {
-            tmp = (CartesianCoordinate) coord;
-        }
+        CartesianCoordinate tmp = coord.asCartesianCoordinate();
         return Math.sqrt(Math.pow(this.x - tmp.x, 2)
                        + Math.pow(this.y - tmp.y, 2)
                        + Math.pow(this.z - tmp.z, 2));
@@ -146,18 +146,8 @@ public class CartesianCoordinate implements Coordinate {
     @Override
     public boolean isEqual(Coordinate coord) {
         boolean isEqual = false;
-
-        // check coordinate type, do conversion if necessary
-        CartesianCoordinate tmp;
-        if (coord instanceof SphericCoordinate) {
-            tmp = coord.asCartesianCoordinate();
-        }
-        else {
-            tmp = (CartesianCoordinate) coord;
-        }
-
-        // do null check
-        if (tmp != null) {
+        if (coord != null) {
+            CartesianCoordinate tmp = coord.asCartesianCoordinate();
             isEqual = this.x == tmp.x
                    && this.y == tmp.y
                    && this.z == tmp.z;
