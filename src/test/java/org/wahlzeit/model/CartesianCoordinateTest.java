@@ -69,5 +69,14 @@ public class CartesianCoordinateTest {
         assertEquals(coord1.getDistance(coord2), 3.4641016, 1e-7);
         assertEquals(coord2.getDistance(coord1), dist, 1e-7);
         assertEquals(coord3.getDistance(coord4), 3, 1e-7);
+
+        assertEquals(coord0.getCartesianDistance(coord1), 0, 1e-7);
+        assertEquals(coord1.getCartesianDistance(coord0), 0, 1e-7);
+        assertEquals(coord0.getCartesianDistance(coord1), coord1.getCartesianDistance(coord0), 1e-7);
+
+        assertNotEquals(coord1.getCartesianDistance(coord2), 0);
+        assertEquals(coord1.getCartesianDistance(coord2), 3.4641016, 1e-7);
+        assertEquals(coord2.getCartesianDistance(coord1), dist, 1e-7);
+        assertEquals(coord3.getCartesianDistance(coord4), 3, 1e-7);
     }
 }

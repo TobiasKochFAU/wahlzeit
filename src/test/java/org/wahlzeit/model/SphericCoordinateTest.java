@@ -58,9 +58,9 @@ public class SphericCoordinateTest {
         SphericCoordinate berlin = new SphericCoordinate(52.5164, 13.3777);
         SphericCoordinate lissabon = new SphericCoordinate(38.692668, -9.177944);
 
-        assertEquals(rüsselBahn.getDistance(rüsselOpel), 1.593, 1e-2);
-        assertEquals(berlin.getDistance(lissabon), 2317.722, 3);
-        assertEquals(berlin.getDistance(berlin), 0.0, 0.0);
+        assertEquals(rüsselBahn.getSphericDistance(rüsselOpel), 1.593, 1e-2);
+        assertEquals(berlin.getSphericDistance(lissabon), 2317.722, 3);
+        assertEquals(berlin.getSphericDistance(berlin), 0.0, 0.0);
     }
 
     /**

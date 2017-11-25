@@ -26,7 +26,7 @@ import java.util.Objects;
  * Class representing a 3d-coordinate.
  * @author Tobias Koch
  */
-public class CartesianCoordinate implements Coordinate {
+public class CartesianCoordinate extends AbstractCoordinate {
 
     /**
      * Coordinates.
@@ -53,10 +53,7 @@ public class CartesianCoordinate implements Coordinate {
      * @throws IllegalArgumentException     If coord is null
      */
     public CartesianCoordinate(Coordinate coord) throws IllegalArgumentException {
-        // null check
-        if (coord == null) {
-            throw new IllegalArgumentException("invalid coordinate");
-        }
+        this.assertIsNotNull(coord);
 
         CartesianCoordinate tmp;
         if(coord instanceof CartesianCoordinate) {
@@ -65,6 +62,7 @@ public class CartesianCoordinate implements Coordinate {
         else {
             tmp = coord.asCartesianCoordinate();
         }
+
         this.x = tmp.x;
         this.y = tmp.y;
         this.z = tmp.z;
@@ -105,40 +103,43 @@ public class CartesianCoordinate implements Coordinate {
 
     /**
      * Compute Euclidean distance to given coordinate.
-     * @param coord    Coordinate to compute distance to
+     * Does a null check.
+     * @param coord     Coordinate to compute distance to
      * @return  cartesian distance
+     * @throws IllegalArgumentException     if coord is null
      */
     @Override
-    public double getDistance(Coordinate coord) {
-        CartesianCoordinate tmp = coord.asCartesianCoordinate();
-        return Math.sqrt(Math.pow(this.x - tmp.x, 2)
-                       + Math.pow(this.y - tmp.y, 2)
-                       + Math.pow(this.z - tmp.z, 2));
+    public double getCartesianDistance(Coordinate coord) throws IllegalArgumentException {
+        this.assertIsNotNull(coord);
+        return this.doGetCartesianDistance(coord);
     }
 
     /**
-     * Forward to getDistance as that computes the cartesian distance.
+     * Compute Euclidean distance to given coordinate.
      * @param coord     Coordinate to compute distance to
      * @return  cartesian distance
      */
-    @Override
-    public double getCartesianDistance(Coordinate coord) {
-        return this.getDistance(coord);
+    protected double doGetCartesianDistance(Coordinate coord) {
+        CartesianCoordinate tmp = coord.asCartesianCoordinate();
+        return Math.sqrt(Math.pow(this.x - tmp.x, 2)
+                + Math.pow(this.y - tmp.y, 2)
+                + Math.pow(this.z - tmp.z, 2));
     }
 
     /**
-     * SphericCoordinate does compute the spheric distance in the
-     * getDistance() function.
+     * Convert this CartesianCoordinate to a SphericCoordinate
+     * as that class contains the spheric distance implementation.
      * @param coord     Coordinate to compute distance to.
      * @return  spheric distance.
      */
     @Override
     public double getSphericDistance(Coordinate coord) {
-        return this.asSphericCoordinate().getDistance(coord);
+        return this.asSphericCoordinate().getSphericDistance(coord);
     }
 
     /**
-     * Compare this coordinate with the given one. Does a null check.
+     * Compare this coordinate with the given one.
+     * Does a null check. But throws no exception.
      * Coordinates are equal if all attributes are equal.
      * @param coord    Coordinate to compare to
      * @return  true if all attributes are equal
@@ -151,21 +152,6 @@ public class CartesianCoordinate implements Coordinate {
             isEqual = this.x == tmp.x
                    && this.y == tmp.y
                    && this.z == tmp.z;
-        }
-        return isEqual;
-    }
-
-    /**
-     * Will forward to isEqual if the given Object is a Coordinate.
-     * isEqual will do a conversion to CartesianCoordinate if necessary.
-     * @param obj   Object to compare to
-     * @return  true if obj is convertible to CartesianCoordinate and all attributes are equal
-     */
-    @Override
-    public boolean equals(Object obj) {
-        boolean isEqual = false;
-        if (obj instanceof Coordinate) {
-            isEqual = this.isEqual((Coordinate) obj);
         }
         return isEqual;
     }

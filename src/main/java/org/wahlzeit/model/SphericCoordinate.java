@@ -23,7 +23,7 @@ package org.wahlzeit.model;
 
 import java.util.Objects;
 
-public class SphericCoordinate implements Coordinate {
+public class SphericCoordinate extends AbstractCoordinate {
 
     /**
      * Radius in kilometer. Assume we are only working with spherical coordinates on earth
@@ -32,8 +32,7 @@ public class SphericCoordinate implements Coordinate {
     public static final double EARTH_RADIUS = 6371.0d;
 
     /**
-     * Degrees (well maybe it is better to keep them in
-     * radians due to the conversion computations).
+     * Degrees
      */
     private final double latitude;
     private final double longitude;
@@ -54,10 +53,7 @@ public class SphericCoordinate implements Coordinate {
      * @throws IllegalArgumentException     If coord is null
      */
     public SphericCoordinate(Coordinate coord) throws IllegalArgumentException {
-        // null check
-        if (coord == null) {
-            throw new IllegalArgumentException("invalid coordinate");
-        }
+        this.assertIsNotNull(coord);
 
         SphericCoordinate tmp;
         if(coord instanceof SphericCoordinate) {
@@ -66,6 +62,7 @@ public class SphericCoordinate implements Coordinate {
         else {
             tmp = coord.asSphericCoordinate();
         }
+
         this.latitude = tmp.latitude;
         this.longitude = tmp.longitude;
     }
@@ -108,12 +105,24 @@ public class SphericCoordinate implements Coordinate {
 
     /**
      * Compute spheric distance to given coordinate.
-     * Formula: https://en.wikipedia.org/wiki/Great-circle_distance#Computational_formulas
-     * @param coord    Coordinate to compute distance to
+     * Does a null check.
+     * @param coord     Coordinate to compute distance to
      * @return  spheric distance
+     * @throws IllegalArgumentException     if coord is null
      */
     @Override
-    public double getDistance(Coordinate coord) {
+    public double getSphericDistance(Coordinate coord) throws IllegalArgumentException {
+        this.assertIsNotNull(coord);
+        return this.doGetSphericDistance(coord);
+    }
+
+    /**
+     * Compute spheric distance to given coordinate.
+     * Formula: https://en.wikipedia.org/wiki/Great-circle_distance#Computational_formulas
+     * @param coord     Coordinate to compute distance to
+     * @return  spheric distance
+     */
+    protected double doGetSphericDistance(Coordinate coord) {
         SphericCoordinate tmp = coord.asSphericCoordinate();
 
         // convert to radians
@@ -140,16 +149,6 @@ public class SphericCoordinate implements Coordinate {
     }
 
     /**
-     * Forward to getDistance as that computes the spheric distance.
-     * @param coord     Coordinate to compute distance to
-     * @return  spheric distance
-     */
-    @Override
-    public double getSphericDistance(Coordinate coord) {
-        return this.getDistance(coord);
-    }
-
-    /**
      * CartesianCoordinate does compute the cartesian distance in the
      * getDistance() function.
      * @param coord     Coordinate to compute distance to.
@@ -157,11 +156,12 @@ public class SphericCoordinate implements Coordinate {
      */
     @Override
     public double getCartesianDistance(Coordinate coord) {
-        return this.asCartesianCoordinate().getDistance(coord);
+        return this.asCartesianCoordinate().getCartesianDistance(coord);
     }
 
     /**
-     * Compare this coordinate with the given one. Does a null check.
+     * Compare this coordinate with the given one.
+     * Does a null check. But throws no exception.
      * Coordinates are equal if all attributes are equal.
      * @param coord    Coordinate to compare to
      * @return  true if all attributes are equal
@@ -173,21 +173,6 @@ public class SphericCoordinate implements Coordinate {
             SphericCoordinate tmp = coord.asSphericCoordinate();
             isEqual = this.latitude == tmp.latitude
                    && this.longitude == tmp.longitude;
-        }
-        return isEqual;
-    }
-
-    /**
-     * Will forward to isEqual if the given Object is a Coordinate.
-     * isEqual will do a conversion to SphericCoordinate if necessary.
-     * @param obj   Object to compare to
-     * @return  true if obj is convertible to SphericCoordinate and all attributes are equal
-     */
-    @Override
-    public boolean equals(Object obj) {
-        boolean isEqual = false;
-        if (obj instanceof Coordinate) {
-            isEqual = this.isEqual((Coordinate) obj);
         }
         return isEqual;
     }
