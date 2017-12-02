@@ -29,5 +29,6 @@ public interface Coordinate {
     double getSphericDistance(Coordinate coord);
 
     double getDistance(Coordinate coord);
+
     boolean isEqual(Coordinate coord);
 }

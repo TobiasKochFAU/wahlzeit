@@ -72,7 +72,7 @@ public class SphericCoordinateTest {
         CartesianCoordinate cart = rüsselBahn.asCartesianCoordinate();
         SphericCoordinate spheric = cart.asSphericCoordinate();
 
-        assertEquals(rüsselBahn.getLatitude(), spheric.getLatitude(), 1e-9);
-        assertEquals(rüsselBahn.getLongitude(), spheric.getLongitude(), 1e-9);
+        assertEquals(rüsselBahn.latitude, spheric.latitude, 1e-9);
+        assertEquals(rüsselBahn.latitude, spheric.latitude, 1e-9);
     }
 }

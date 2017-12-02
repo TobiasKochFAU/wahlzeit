@@ -23,28 +23,36 @@ package org.wahlzeit.model;
 
 import java.util.Objects;
 
+/**
+ * Class representing a spherical coordinate with latitude and longitude in degree.
+ * Coordinate is specified to lie on the earths surface.
+ * Distances and coordinate precision is up to {@link AbstractCoordinate#DELTA}
+ *
+ * @author Tobias Koch
+ */
 public class SphericCoordinate extends AbstractCoordinate {
 
     /**
-     * Radius in kilometer. Assume we are only working with spherical coordinates on earth
-     * we can set a constant radius. We ignore the fact that the earth is not a perfect spherical.
+     * Coordinates with precision of {@link #DELTA} in degree.
      */
-    public static final double EARTH_RADIUS = 6371.0d;
+    protected final double latitude;
+    protected final double longitude;
 
     /**
-     * Degrees
-     */
-    private final double latitude;
-    private final double longitude;
-
-    /**
-     * Constructor.
+     * Constructor. Will round latitude and longitude to {@link #DELTA} decimals.
+     * Then checks whether they are valid.
      * @param latitude  latitude coordinate
      * @param longitude     longitude coordinate
+     * @throws IllegalArgumentException     check {@link #assertValidPosition(double, double)}
      */
-    public SphericCoordinate(double latitude, double longitude) {
-        this.latitude = latitude;
-        this.longitude = longitude;
+    public SphericCoordinate(double latitude, double longitude) throws IllegalArgumentException {
+        double tmpLat = AbstractCoordinate.round(latitude);
+        double tmpLong = AbstractCoordinate.round(longitude);
+
+        this.assertValidPosition(tmpLat, tmpLong);
+
+        this.latitude = tmpLat;
+        this.longitude = tmpLong;
     }
 
     /**
@@ -67,14 +75,6 @@ public class SphericCoordinate extends AbstractCoordinate {
         this.longitude = tmp.longitude;
     }
 
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
     /**
      * Creates a copy of this object.
      * @return  copy of this object.
@@ -91,7 +91,6 @@ public class SphericCoordinate extends AbstractCoordinate {
      */
     @Override
     public CartesianCoordinate asCartesianCoordinate() {
-        // temporary
         double radLat = Math.toRadians(this.latitude);
         double radLong = Math.toRadians(this.longitude);
         double rMulSinLat = SphericCoordinate.EARTH_RADIUS * Math.sin(radLat);
@@ -105,7 +104,7 @@ public class SphericCoordinate extends AbstractCoordinate {
 
     /**
      * Compute spheric distance to given coordinate.
-     * Does a null check.
+     * Does a null check as precondition and a distance check as postcondition.
      * @param coord     Coordinate to compute distance to
      * @return  spheric distance
      * @throws IllegalArgumentException     if coord is null
@@ -113,11 +112,14 @@ public class SphericCoordinate extends AbstractCoordinate {
     @Override
     public double getSphericDistance(Coordinate coord) throws IllegalArgumentException {
         this.assertIsNotNull(coord);
-        return this.doGetSphericDistance(coord);
+        double distance = this.doGetSphericDistance(coord);
+        this.assertValidDistance(distance);
+        return distance;
     }
 
     /**
      * Compute spheric distance to given coordinate.
+     * Distance is rounded to {@link #DELTA} decimals.
      * Formula: https://en.wikipedia.org/wiki/Great-circle_distance#Computational_formulas
      * @param coord     Coordinate to compute distance to
      * @return  spheric distance
@@ -145,7 +147,7 @@ public class SphericCoordinate extends AbstractCoordinate {
         double numerator = Math.sqrt(numeratorA + numeratorB);
 
         double denominator = (sinLat1 * sinLat2) + (cosLat1 * cosLat2 * cosDeltaLong);
-        return SphericCoordinate.EARTH_RADIUS * Math.atan2(numerator, denominator);
+        return AbstractCoordinate.round(SphericCoordinate.EARTH_RADIUS * Math.atan2(numerator, denominator));
     }
 
     /**
@@ -184,5 +186,17 @@ public class SphericCoordinate extends AbstractCoordinate {
     @Override
     public int hashCode() {
         return Objects.hash(this.latitude, this.longitude);
+    }
+
+    /**
+     * Throw exception if latitude or longitude are invalid.
+     * @param latitude  latitude to check
+     * @param longitude longitude to check
+     * @throws IllegalArgumentException if -90 > latitude > 90 or -180 > longitude > 180
+     */
+    protected void assertValidPosition(double latitude, double longitude) throws IllegalArgumentException {
+        if (latitude < -90.0d || latitude > 90.0d || longitude < -180.0d || longitude > 180.0d) {
+            throw new IllegalArgumentException("Invalid position!");
+        }
     }
 }
