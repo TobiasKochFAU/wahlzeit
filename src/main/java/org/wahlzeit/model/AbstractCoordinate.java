@@ -8,19 +8,23 @@ public abstract class AbstractCoordinate implements Coordinate {
     /**
      * Methods subclasses have to implement.
      */
+    @Override
     public abstract CartesianCoordinate asCartesianCoordinate();
-    public abstract double getCartesianDistance(Coordinate coord);
 
+    @Override
     public abstract SphericCoordinate asSphericCoordinate();
-    public abstract double getSphericDistance(Coordinate coord);
 
+    @Override
     public abstract boolean isEqual(Coordinate coord);
 
+    @Override
+    public abstract int hashCode();
+
     /**
-     * This number denotes the number of decimals used to represent
+     * This number denotes the number of decimal places used to represent
      * coordinates precision and distance values.
      * All coordinate attributes and computed distances will be
-     * rounded to DELTA decimals.
+     * rounded to DELTA decimal places.
      */
     public static final int DELTA = 10;
 
@@ -32,28 +36,44 @@ public abstract class AbstractCoordinate implements Coordinate {
 
     /**
      * Standard distance computes the cartesian distance.
-     * Does a null check as precondition and a distance check as postcondition.
+     * Forwards to {@link #getCartesianDistance(Coordinate)}.
      * @param coord     Coordinate to compute distance to.
      * @return      Cartesian distance.
      * @throws IllegalArgumentException     if coord is null, distance < 0
      */
     @Override
     public double getDistance(Coordinate coord) throws IllegalArgumentException {
+        return this.getCartesianDistance(coord);
+    }
+
+    /**
+     * Compute Euclidean distance to given coordinate.
+     * Does a null check as precondition and a distance check as postcondition.
+     * @param coord     Coordinate to compute distance to
+     * @return  cartesian distance
+     * @throws IllegalArgumentException     if coord is null
+     */
+    @Override
+    public double getCartesianDistance(Coordinate coord) throws IllegalArgumentException {
         this.assertIsNotNull(coord);
-        double distance = this.doGetDistance(coord);
+        double distance = this.asCartesianCoordinate().doGetCartesianDistance(coord);
         this.assertValidDistance(distance);
         return distance;
     }
 
     /**
-     * Standard distance computes the cartesian distance.
-     * Converts this Coordinate to a CartesianCoordinate
-     * as that class contains the cartesian distance implementation.
-     * @param coord     Coordinate to compute distance to.
-     * @return      Cartesian distance.
+     * Compute spheric distance to given coordinate.
+     * Does a null check as precondition and a distance check as postcondition.
+     * @param coord     Coordinate to compute distance to
+     * @return  spheric distance
+     * @throws IllegalArgumentException     if coord is null
      */
-    private double doGetDistance(Coordinate coord) {
-        return this.asCartesianCoordinate().doGetCartesianDistance(coord);
+    @Override
+    public double getSphericDistance(Coordinate coord) throws IllegalArgumentException {
+        this.assertIsNotNull(coord);
+        double distance = this.asSphericCoordinate().doGetSphericDistance(coord);
+        this.assertValidDistance(distance);
+        return distance;
     }
 
     /**
@@ -72,7 +92,7 @@ public abstract class AbstractCoordinate implements Coordinate {
     }
 
     /**
-     * Will round a number to {@link #DELTA} decimals.
+     * Will round a number to {@link #DELTA} decimal places.
      * Taken from: https://stackoverflow.com/questions/2808535/round-a-double-to-2-decimal-places/2808648#2808648
      * Recent access: 01.12.2017, 19:21
      * @param value     Number to round.
@@ -100,7 +120,7 @@ public abstract class AbstractCoordinate implements Coordinate {
      * @param distance  Distance to check
      * @throws IllegalArgumentException     if distance < 0
      */
-    protected void assertValidDistance(double distance) throws IllegalArgumentException {
+    private void assertValidDistance(double distance) throws IllegalArgumentException {
         if (distance < 0.0d) {
             throw new IllegalArgumentException("Invalid distance!");
         }

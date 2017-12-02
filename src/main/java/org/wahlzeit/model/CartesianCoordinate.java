@@ -44,7 +44,7 @@ public class CartesianCoordinate extends AbstractCoordinate {
     protected final double z;
 
     /**
-     * Constructor. Will round x, y, z to {@link #DELTA} decimals.
+     * Constructor. Will round x, y, z to {@link #DELTA} decimal places.
      * Then checks whether x, y, z lie on the earths radius.
      * @param x coordinate
      * @param y coordinate
@@ -107,21 +107,6 @@ public class CartesianCoordinate extends AbstractCoordinate {
 
     /**
      * Compute Euclidean distance to given coordinate.
-     * Does a null check as precondition and a distance check as postcondition.
-     * @param coord     Coordinate to compute distance to
-     * @return  cartesian distance
-     * @throws IllegalArgumentException     if coord is null
-     */
-    @Override
-    public double getCartesianDistance(Coordinate coord) throws IllegalArgumentException {
-        this.assertIsNotNull(coord);
-        double distance = this.doGetCartesianDistance(coord);
-        this.assertValidDistance(distance);
-        return distance;
-    }
-
-    /**
-     * Compute Euclidean distance to given coordinate.
      * Distance is rounded to {@link #DELTA} decimals.
      * @param coord     Coordinate to compute distance to
      * @return  cartesian distance
@@ -131,17 +116,6 @@ public class CartesianCoordinate extends AbstractCoordinate {
         return AbstractCoordinate.round(Math.sqrt(Math.pow(this.x - tmp.x, 2)
                                                 + Math.pow(this.y - tmp.y, 2)
                                                 + Math.pow(this.z - tmp.z, 2)));
-    }
-
-    /**
-     * Convert this CartesianCoordinate to a SphericCoordinate
-     * as that class contains the spheric distance implementation.
-     * @param coord     Coordinate to compute distance to.
-     * @return  spheric distance.
-     */
-    @Override
-    public double getSphericDistance(Coordinate coord) {
-        return this.asSphericCoordinate().getSphericDistance(coord);
     }
 
     /**
@@ -179,8 +153,8 @@ public class CartesianCoordinate extends AbstractCoordinate {
      * @param z z-coordinate
      * @throws IllegalStateException    if (x + y + z) != ({@link #EARTH_RADIUS} +- {@link #EARTH_RADIUS_DELTA})
      */
-    protected void assertValidAxisValues(double x, double y, double z) throws IllegalArgumentException {
-        if (Math.abs((x + y + z) - AbstractCoordinate.EARTH_RADIUS) <= EARTH_RADIUS_DELTA) {
+    private void assertValidAxisValues(double x, double y, double z) throws IllegalArgumentException {
+        if (Math.abs((x + y + z) - AbstractCoordinate.EARTH_RADIUS) <= CartesianCoordinate.EARTH_RADIUS_DELTA) {
             throw new IllegalArgumentException("Invalid axis values! Coordinates do not lie on the earths radius.");
         }
     }

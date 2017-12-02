@@ -104,21 +104,6 @@ public class SphericCoordinate extends AbstractCoordinate {
 
     /**
      * Compute spheric distance to given coordinate.
-     * Does a null check as precondition and a distance check as postcondition.
-     * @param coord     Coordinate to compute distance to
-     * @return  spheric distance
-     * @throws IllegalArgumentException     if coord is null
-     */
-    @Override
-    public double getSphericDistance(Coordinate coord) throws IllegalArgumentException {
-        this.assertIsNotNull(coord);
-        double distance = this.doGetSphericDistance(coord);
-        this.assertValidDistance(distance);
-        return distance;
-    }
-
-    /**
-     * Compute spheric distance to given coordinate.
      * Distance is rounded to {@link #DELTA} decimals.
      * Formula: https://en.wikipedia.org/wiki/Great-circle_distance#Computational_formulas
      * @param coord     Coordinate to compute distance to
@@ -148,17 +133,6 @@ public class SphericCoordinate extends AbstractCoordinate {
 
         double denominator = (sinLat1 * sinLat2) + (cosLat1 * cosLat2 * cosDeltaLong);
         return AbstractCoordinate.round(SphericCoordinate.EARTH_RADIUS * Math.atan2(numerator, denominator));
-    }
-
-    /**
-     * CartesianCoordinate does compute the cartesian distance in the
-     * getDistance() function.
-     * @param coord     Coordinate to compute distance to.
-     * @return  cartesian distance.
-     */
-    @Override
-    public double getCartesianDistance(Coordinate coord) {
-        return this.asCartesianCoordinate().getCartesianDistance(coord);
     }
 
     /**
@@ -192,9 +166,9 @@ public class SphericCoordinate extends AbstractCoordinate {
      * Throw exception if latitude or longitude are invalid.
      * @param latitude  latitude to check
      * @param longitude longitude to check
-     * @throws IllegalArgumentException if -90 > latitude > 90 or -180 > longitude > 180
+     * @throws IllegalArgumentException if (-90 > latitude > 90) or (-180 > longitude > 180)
      */
-    protected void assertValidPosition(double latitude, double longitude) throws IllegalArgumentException {
+    private void assertValidPosition(double latitude, double longitude) throws IllegalArgumentException {
         if (latitude < -90.0d || latitude > 90.0d || longitude < -180.0d || longitude > 180.0d) {
             throw new IllegalArgumentException("Invalid position!");
         }
