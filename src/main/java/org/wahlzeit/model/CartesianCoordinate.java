@@ -49,18 +49,14 @@ public class CartesianCoordinate extends AbstractCoordinate {
      * @param x coordinate
      * @param y coordinate
      * @param z coordinate
-     * @throws IllegalArgumentException     check {@link #assertValidAxisValues(double, double, double)}
+     * @throws IllegalStateException     check {@link #assertClassInvariants()}
      */
-    public CartesianCoordinate(double x, double y, double z) throws IllegalArgumentException {
-        double tmpX = AbstractCoordinate.round(x);
-        double tmpY = AbstractCoordinate.round(y);
-        double tmpZ = AbstractCoordinate.round(z);
+    public CartesianCoordinate(double x, double y, double z) throws IllegalStateException {
+        this.x = AbstractCoordinate.round(x);
+        this.y = AbstractCoordinate.round(y);
+        this.z = AbstractCoordinate.round(z);
 
-        this.assertValidAxisValues(tmpX, tmpY, tmpZ);
-
-        this.x = tmpX;
-        this.y = tmpY;
-        this.z = tmpZ;
+        this.assertClassInvariants();
     }
 
     /**
@@ -147,15 +143,13 @@ public class CartesianCoordinate extends AbstractCoordinate {
     }
 
     /**
-     * Throw exception if x, y, z do not lie on the earths radius. With precision of {@link #EARTH_RADIUS_DELTA}
-     * @param x x-coordinate
-     * @param y y-coordinate
-     * @param z z-coordinate
+     * Throw exception if (this) x, y, z do not lie on the earths radius. With precision of {@link #EARTH_RADIUS_DELTA}
      * @throws IllegalStateException    if (x + y + z) != ({@link #EARTH_RADIUS} +- {@link #EARTH_RADIUS_DELTA})
      */
-    private void assertValidAxisValues(double x, double y, double z) throws IllegalArgumentException {
-        if (Math.abs((x + y + z) - AbstractCoordinate.EARTH_RADIUS) <= CartesianCoordinate.EARTH_RADIUS_DELTA) {
-            throw new IllegalArgumentException("Invalid axis values! Coordinates do not lie on the earths radius.");
+    private void assertClassInvariants() throws IllegalStateException {
+        if (Math.abs((this.x + this.y + this.z) - AbstractCoordinate.EARTH_RADIUS)
+                <= CartesianCoordinate.EARTH_RADIUS_DELTA) {
+            throw new IllegalStateException("Invalid axes values! Coordinate does not lie on the earths radius.");
         }
     }
 }

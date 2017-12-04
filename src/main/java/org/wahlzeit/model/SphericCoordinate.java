@@ -43,16 +43,13 @@ public class SphericCoordinate extends AbstractCoordinate {
      * Then checks whether they are valid.
      * @param latitude  latitude coordinate
      * @param longitude     longitude coordinate
-     * @throws IllegalArgumentException     check {@link #assertValidPosition(double, double)}
+     * @throws IllegalStateException     check {@link #assertClassInvariants()}
      */
-    public SphericCoordinate(double latitude, double longitude) throws IllegalArgumentException {
-        double tmpLat = AbstractCoordinate.round(latitude);
-        double tmpLong = AbstractCoordinate.round(longitude);
+    public SphericCoordinate(double latitude, double longitude) throws IllegalStateException {
+        this.latitude = AbstractCoordinate.round(latitude);
+        this.longitude = AbstractCoordinate.round(longitude);
 
-        this.assertValidPosition(tmpLat, tmpLong);
-
-        this.latitude = tmpLat;
-        this.longitude = tmpLong;
+        this.assertClassInvariants();
     }
 
     /**
@@ -163,14 +160,12 @@ public class SphericCoordinate extends AbstractCoordinate {
     }
 
     /**
-     * Throw exception if latitude or longitude are invalid.
-     * @param latitude  latitude to check
-     * @param longitude longitude to check
-     * @throws IllegalArgumentException if (-90 > latitude > 90) or (-180 > longitude > 180)
+     * Throw exception if (this) latitude or longitude are invalid.
+     * @throws IllegalStateException if (-90 > latitude > 90) or (-180 > longitude > 180)
      */
-    private void assertValidPosition(double latitude, double longitude) throws IllegalArgumentException {
-        if (latitude < -90.0d || latitude > 90.0d || longitude < -180.0d || longitude > 180.0d) {
-            throw new IllegalArgumentException("Invalid position!");
+    private void assertClassInvariants() throws IllegalStateException {
+        if (this.latitude < -90.0d || this.latitude > 90.0d || this.longitude < -180.0d || this.longitude > 180.0d) {
+            throw new IllegalStateException("Invalid position!");
         }
     }
 }
