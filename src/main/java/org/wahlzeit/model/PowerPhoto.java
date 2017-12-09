@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2009 by Tobias Koch
+ * Copyright (c) 2017 by Tobias Koch
  *
  * This file is part of the Wahlzeit photo rating application.
  *
@@ -21,6 +21,9 @@
 package org.wahlzeit.model;
 
 import com.googlecode.objectify.annotation.Subclass;
+import org.wahlzeit.utils.asserts.DoubleAssert;
+import org.wahlzeit.utils.asserts.IntegerAssert;
+import org.wahlzeit.utils.asserts.ObjectAssert;
 
 @Subclass
 public class PowerPhoto extends Photo {
@@ -48,7 +51,23 @@ public class PowerPhoto extends Photo {
         return name;
     }
 
+    /**
+     * Set name, if name is null this method will
+     * do nothing as this does not lead to an enormous invalid program state.
+     * @param name  name to set
+     */
     public void setName(String name) {
+        try {
+            ObjectAssert.assertNotNull(name, "Name is null!");
+            this.doSetName(name);
+        }
+        catch (IllegalArgumentException exc) {
+            // do nothing, keep old value
+            // could write to log or something
+        }
+    }
+
+    private void doSetName(String name) {
         this.name = name;
     }
 
@@ -56,7 +75,23 @@ public class PowerPhoto extends Photo {
         return type;
     }
 
+    /**
+     * Set type, if type is null this method will
+     * do nothing as this does not lead to an enormous invalid program state.
+     * @param type  type to set
+     */
     public void setType(String type) {
+        try {
+            ObjectAssert.assertNotNull(type, "Type is null!");
+            this.doSetType(type);
+        }
+        catch (IllegalArgumentException exc) {
+            // do nothing, keep old value
+            // could write to log or something
+        }
+    }
+
+    private void doSetType(String type) {
         this.type = type;
     }
 
@@ -64,7 +99,23 @@ public class PowerPhoto extends Photo {
         return yearStartUp;
     }
 
+    /**
+     * Set year start up, if yearStartUp is negative this method will
+     * do nothing as this does not lead to an enormous invalid program state.
+     * @param yearStartUp  yearStartUp to set
+     */
     public void setYearStartUp(int yearStartUp) {
+        try {
+            IntegerAssert.assertPositiveZero(yearStartUp, "Year start up is negative!");
+            this.doSetYearStartUp(yearStartUp);
+        }
+        catch (IllegalArgumentException exc) {
+            // do nothing, keep old value
+            // could write to log or something
+        }
+    }
+
+    private void doSetYearStartUp(int yearStartUp) {
         this.yearStartUp = yearStartUp;
     }
 
@@ -74,19 +125,34 @@ public class PowerPhoto extends Photo {
 
     /**
      * Capacity has to be set together with related year.
-     * @param capacitySinceStart    capacity measured since start until yearCapacity
-     * @param yearCapacity      year of measured capacity
+     * If capacitySinceStart or yearCapacity are negative this method will
+     * do nothing as this does not lead to an enormous invalid program state.
+     * @param capacitySinceStart  capacity measured since start until yearCapacity
+     * @param yearCapacity  year of measured capacity
      */
     public void setCapacitySinceStart(double capacitySinceStart, int yearCapacity) {
-        this.setYearCapacity(yearCapacity);
-        this.setCapacitySinceStart(capacitySinceStart);
+        try {
+            DoubleAssert.assertPositiveZero(capacitySinceStart, "Capacity since start is negative!");
+            IntegerAssert.assertPositiveZero(yearCapacity, "Year capacity is negative!");
+            this.assertValidYearCapacity(yearCapacity);
+            this.doSetCapacitySinceStart(capacitySinceStart, yearCapacity);
+        }
+        catch (IllegalArgumentException exc) {
+            // do nothing, keep old values
+            // could write to log or something
+        }
+    }
+
+    private void doSetCapacitySinceStart(double capacitySinceStart, int yearCapacity) {
+        this.doSetYearCapacity(yearCapacity);
+        this.doSetCapacitySinceStart(capacitySinceStart);
     }
 
     /**
      * private as the capacity should not be set without the related year.
      * @param capacitySinceStart    capacity measured since start until yearCapacity
      */
-    private void setCapacitySinceStart(double capacitySinceStart) {
+    private void doSetCapacitySinceStart(double capacitySinceStart) {
         this.capacitySinceStart = capacitySinceStart;
     }
 
@@ -94,16 +160,14 @@ public class PowerPhoto extends Photo {
         return yearCapacity;
     }
 
-    /**
-     * private as the year should not be set without the related capacity.
-     * Throws exception if yearCapacity is smaller than this.yearStartUp.
-     * @param yearCapacity      year of measured capacity
-     */
-    private void setYearCapacity(int yearCapacity) {
+    private void doSetYearCapacity(int yearCapacity) {
+        this.yearCapacity = yearCapacity;
+    }
+
+    private void assertValidYearCapacity(int yearCapacity) {
         if (yearCapacity < this.yearStartUp) {
             throw new IllegalArgumentException("year in which the capacity was measured " +
                     "can not be smaller than the plant start up year");
         }
-        this.yearCapacity = yearCapacity;
     }
 }

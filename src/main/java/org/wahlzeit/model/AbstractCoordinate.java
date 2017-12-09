@@ -1,4 +1,27 @@
+/*
+ * Copyright (c) 2017 by Tobias Koch
+ *
+ * This file is part of the Wahlzeit photo rating application.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public
+ * License along with this program. If not, see
+ * <http://www.gnu.org/licenses/>.
+ */
+
 package org.wahlzeit.model;
+
+import org.wahlzeit.utils.asserts.DoubleAssert;
+import org.wahlzeit.utils.asserts.ObjectAssert;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -8,17 +31,14 @@ public abstract class AbstractCoordinate implements Coordinate {
     /**
      * Methods subclasses have to implement.
      */
-    @Override
     public abstract CartesianCoordinate asCartesianCoordinate();
-
-    @Override
     public abstract SphericCoordinate asSphericCoordinate();
 
-    @Override
     public abstract boolean isEqual(Coordinate coord);
 
-    @Override
     public abstract int hashCode();
+
+    protected abstract void assertClassInvariants();
 
     /**
      * This number denotes the number of decimal places used to represent
@@ -39,7 +59,7 @@ public abstract class AbstractCoordinate implements Coordinate {
      * Forwards to {@link #getCartesianDistance(Coordinate)}.
      * @param coord     Coordinate to compute distance to.
      * @return      Cartesian distance.
-     * @throws IllegalArgumentException     if coord is null, distance < 0
+     * @throws IllegalArgumentException     if coord is null or computed distance < 0
      */
     @Override
     public double getDistance(Coordinate coord) throws IllegalArgumentException {
@@ -51,13 +71,13 @@ public abstract class AbstractCoordinate implements Coordinate {
      * Does a null check as precondition and a distance check as postcondition.
      * @param coord     Coordinate to compute distance to
      * @return  cartesian distance
-     * @throws IllegalArgumentException     if coord is null
+     * @throws IllegalArgumentException     if coord is null or computed distance < 0
      */
     @Override
     public double getCartesianDistance(Coordinate coord) throws IllegalArgumentException {
-        this.assertIsNotNull(coord);
+        ObjectAssert.assertNotNull(coord, "Coordinate is null!");
         double distance = this.asCartesianCoordinate().doGetCartesianDistance(coord);
-        this.assertValidDistance(distance);
+        DoubleAssert.assertPositiveZero(distance, "Invalid distance: " + distance + " < 0");
         return distance;
     }
 
@@ -66,13 +86,13 @@ public abstract class AbstractCoordinate implements Coordinate {
      * Does a null check as precondition and a distance check as postcondition.
      * @param coord     Coordinate to compute distance to
      * @return  spheric distance
-     * @throws IllegalArgumentException     if coord is null
+     * @throws IllegalArgumentException     if coord is null or computed distance < 0
      */
     @Override
     public double getSphericDistance(Coordinate coord) throws IllegalArgumentException {
-        this.assertIsNotNull(coord);
+        ObjectAssert.assertNotNull(coord, "Coordinate is null!");
         double distance = this.asSphericCoordinate().doGetSphericDistance(coord);
-        this.assertValidDistance(distance);
+        DoubleAssert.assertPositiveZero(distance, "Invalid distance: " + distance + " < 0");
         return distance;
     }
 
@@ -102,27 +122,5 @@ public abstract class AbstractCoordinate implements Coordinate {
         BigDecimal bd = new BigDecimal(value);
         bd = bd.setScale(AbstractCoordinate.DELTA, RoundingMode.HALF_UP);
         return bd.doubleValue();
-    }
-
-    /**
-     * Throw exception if coordinate is null.
-     * @param coord     Coordinate to check.
-     * @throws IllegalArgumentException     if coord is null
-     */
-    protected void assertIsNotNull(Coordinate coord) throws IllegalArgumentException {
-        if (coord == null) {
-            throw new IllegalArgumentException("Coordinate is null!");
-        }
-    }
-
-    /**
-     * Throw exception if distance is less 0.
-     * @param distance  Distance to check
-     * @throws IllegalArgumentException     if distance < 0
-     */
-    private void assertValidDistance(double distance) throws IllegalArgumentException {
-        if (distance < 0.0d) {
-            throw new IllegalArgumentException("Invalid distance!");
-        }
     }
 }

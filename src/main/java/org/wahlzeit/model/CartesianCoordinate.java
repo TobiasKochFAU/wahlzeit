@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2009 by Tobias Koch
+ * Copyright (c) 2017 by Tobias Koch
  *
  * This file is part of the Wahlzeit photo rating application.
  *
@@ -19,6 +19,8 @@
  */
 
 package org.wahlzeit.model;
+
+import org.wahlzeit.utils.asserts.ObjectAssert;
 
 import java.util.Objects;
 
@@ -49,9 +51,9 @@ public class CartesianCoordinate extends AbstractCoordinate {
      * @param x coordinate
      * @param y coordinate
      * @param z coordinate
-     * @throws IllegalStateException     check {@link #assertClassInvariants()}
+     * @throws CoordinateRuntimeException     check {@link #assertClassInvariants()}
      */
-    public CartesianCoordinate(double x, double y, double z) throws IllegalStateException {
+    public CartesianCoordinate(double x, double y, double z) throws CoordinateRuntimeException {
         this.x = AbstractCoordinate.round(x);
         this.y = AbstractCoordinate.round(y);
         this.z = AbstractCoordinate.round(z);
@@ -65,7 +67,7 @@ public class CartesianCoordinate extends AbstractCoordinate {
      * @throws IllegalArgumentException     If coord is null
      */
     public CartesianCoordinate(Coordinate coord) throws IllegalArgumentException {
-        this.assertIsNotNull(coord);
+        ObjectAssert.assertNotNull(coord, "Coordinate is null!");
 
         CartesianCoordinate tmp;
         if(coord instanceof CartesianCoordinate) {
@@ -144,12 +146,13 @@ public class CartesianCoordinate extends AbstractCoordinate {
 
     /**
      * Throw exception if (this) x, y, z do not lie on the earths radius. With precision of {@link #EARTH_RADIUS_DELTA}
-     * @throws IllegalStateException    if (x + y + z) != ({@link #EARTH_RADIUS} +- {@link #EARTH_RADIUS_DELTA})
+     * @throws CoordinateRuntimeException    if (x + y + z) != ({@link #EARTH_RADIUS} +- {@link #EARTH_RADIUS_DELTA})
      */
-    private void assertClassInvariants() throws IllegalStateException {
+    @Override
+    protected void assertClassInvariants() throws CoordinateRuntimeException {
         if (Math.abs((this.x + this.y + this.z) - AbstractCoordinate.EARTH_RADIUS)
                 <= CartesianCoordinate.EARTH_RADIUS_DELTA) {
-            throw new IllegalStateException("Invalid axes values! Coordinate does not lie on the earths radius.");
+            throw new CoordinateRuntimeException("Invalid axes values! Coordinate does not lie on the earths radius.");
         }
     }
 }

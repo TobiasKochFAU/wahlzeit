@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2009 by Tobias Koch
+ * Copyright (c) 2017 by Tobias Koch
  *
  * This file is part of the Wahlzeit photo rating application.
  *
@@ -20,6 +20,8 @@
 
 package org.wahlzeit.model;
 
+
+import org.wahlzeit.utils.asserts.ObjectAssert;
 
 import java.util.Objects;
 
@@ -43,9 +45,9 @@ public class SphericCoordinate extends AbstractCoordinate {
      * Then checks whether they are valid.
      * @param latitude  latitude coordinate
      * @param longitude     longitude coordinate
-     * @throws IllegalStateException     check {@link #assertClassInvariants()}
+     * @throws CoordinateRuntimeException     check {@link #assertClassInvariants()}
      */
-    public SphericCoordinate(double latitude, double longitude) throws IllegalStateException {
+    public SphericCoordinate(double latitude, double longitude) throws CoordinateRuntimeException {
         this.latitude = AbstractCoordinate.round(latitude);
         this.longitude = AbstractCoordinate.round(longitude);
 
@@ -58,7 +60,7 @@ public class SphericCoordinate extends AbstractCoordinate {
      * @throws IllegalArgumentException     If coord is null
      */
     public SphericCoordinate(Coordinate coord) throws IllegalArgumentException {
-        this.assertIsNotNull(coord);
+        ObjectAssert.assertNotNull(coord, "Coordinate is null!");
 
         SphericCoordinate tmp;
         if(coord instanceof SphericCoordinate) {
@@ -161,11 +163,12 @@ public class SphericCoordinate extends AbstractCoordinate {
 
     /**
      * Throw exception if (this) latitude or longitude are invalid.
-     * @throws IllegalStateException if (-90 > latitude > 90) or (-180 > longitude > 180)
+     * @throws CoordinateRuntimeException if (-90 > latitude > 90) or (-180 > longitude > 180)
      */
-    private void assertClassInvariants() throws IllegalStateException {
+    @Override
+    protected void assertClassInvariants() throws CoordinateRuntimeException {
         if (this.latitude < -90.0d || this.latitude > 90.0d || this.longitude < -180.0d || this.longitude > 180.0d) {
-            throw new IllegalStateException("Invalid position!");
+            throw new CoordinateRuntimeException("Invalid position!");
         }
     }
 }

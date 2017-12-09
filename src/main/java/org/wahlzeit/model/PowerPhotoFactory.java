@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2009 by Tobias Koch
+ * Copyright (c) 2017 by Tobias Koch
  *
  * This file is part of the Wahlzeit photo rating application.
  *
@@ -21,6 +21,7 @@
 package org.wahlzeit.model;
 
 import org.wahlzeit.services.LogBuilder;
+import org.wahlzeit.utils.asserts.ObjectAssert;
 
 import java.util.logging.Logger;
 
@@ -82,10 +83,19 @@ public class PowerPhotoFactory extends PhotoFactory {
     }
 
     /**
-     * Creates a new power photo with the specified id
+     * Creates a new power photo with the specified id.
+     * If the id is null the photo will get an unused id by itself.
      */
     @Override
     public PowerPhoto createPhoto(PhotoId id) {
-        return new PowerPhoto(id);
+        PowerPhoto photo;
+        try {
+            ObjectAssert.assertNotNull(id, "PhotoId is null!");
+            photo = new PowerPhoto(id);
+        }
+        catch(IllegalArgumentException exc) {
+            photo = this.createPhoto();
+        }
+        return photo;
     }
 }

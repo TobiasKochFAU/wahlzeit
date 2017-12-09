@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2009 by Tobias Koch
+ * Copyright (c) 2017 by Tobias Koch
  *
  * This file is part of the Wahlzeit photo rating application.
  *
@@ -20,6 +20,8 @@
 
 package org.wahlzeit.model;
 
+import org.wahlzeit.utils.asserts.ObjectAssert;
+
 /**
  * Class representing a location.
  * @author Tobias Koch
@@ -28,13 +30,14 @@ public class Location {
     /**
      * Coordinate
      */
-    public Coordinate coordinate = null;
+    protected Coordinate coordinate = null;
 
     /**
      * Constructor
      * @param coord    Coordinate
      */
     public Location(Coordinate coord) {
+        ObjectAssert.assertNotNull(coord, "Coordinate is null!");
         this.coordinate = coord;
     }
 }

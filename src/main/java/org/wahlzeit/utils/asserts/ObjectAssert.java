@@ -18,17 +18,21 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-package org.wahlzeit.model;
+package org.wahlzeit.utils.asserts;
 
+/**
+ * Class providing assertions for Object.
+ */
+public class ObjectAssert {
 
-public interface Coordinate {
-    CartesianCoordinate asCartesianCoordinate();
-    double getCartesianDistance(Coordinate coord);
-
-    SphericCoordinate asSphericCoordinate();
-    double getSphericDistance(Coordinate coord);
-
-    double getDistance(Coordinate coord);
-
-    boolean isEqual(Coordinate coord);
+    /**
+     * Check whether obj is null.
+     * @param obj   obj to check
+     * @throws IllegalArgumentException     if obj == null
+     */
+    public static void assertNotNull(Object obj, String message) throws IllegalArgumentException {
+        if (obj == null) {
+            throw new IllegalArgumentException(message);
+        }
+    }
 }

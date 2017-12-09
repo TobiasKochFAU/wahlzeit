@@ -18,17 +18,19 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-package org.wahlzeit.model;
+package org.wahlzeit.utils.asserts;
 
+public class DoubleAssert {
 
-public interface Coordinate {
-    CartesianCoordinate asCartesianCoordinate();
-    double getCartesianDistance(Coordinate coord);
-
-    SphericCoordinate asSphericCoordinate();
-    double getSphericDistance(Coordinate coord);
-
-    double getDistance(Coordinate coord);
-
-    boolean isEqual(Coordinate coord);
+    /**
+     * Check for a positive or zero value.
+     * @param val   value to check
+     * @param message   message to show
+     * @throws IllegalArgumentException     if val < 0
+     */
+    public static void assertPositiveZero(double val, String message) throws IllegalArgumentException {
+        if (val < 0.0d) {
+            throw new IllegalArgumentException(message);
+        }
+    }
 }

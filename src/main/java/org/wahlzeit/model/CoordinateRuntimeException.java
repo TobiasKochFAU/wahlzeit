@@ -20,15 +20,24 @@
 
 package org.wahlzeit.model;
 
+/**
+ * Exception used to throw if any incorrect runtime errors occur in any Coordinate instances.
+ */
+public class CoordinateRuntimeException extends RuntimeException {
 
-public interface Coordinate {
-    CartesianCoordinate asCartesianCoordinate();
-    double getCartesianDistance(Coordinate coord);
+    public CoordinateRuntimeException() {
+        super();
+    }
 
-    SphericCoordinate asSphericCoordinate();
-    double getSphericDistance(Coordinate coord);
+    public CoordinateRuntimeException(String message) {
+        super(message);
+    }
 
-    double getDistance(Coordinate coord);
+    public CoordinateRuntimeException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-    boolean isEqual(Coordinate coord);
+    public CoordinateRuntimeException(Throwable cause) {
+        super(cause);
+    }
 }
