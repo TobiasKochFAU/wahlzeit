@@ -33,12 +33,12 @@ public class SphericCoordinateTest {
     @Test
     public void testEquals() {
         // Arrange
-        SphericCoordinate coord0 = new SphericCoordinate(0, 1);
-        SphericCoordinate coord1 = new SphericCoordinate(0, 1);
-        SphericCoordinate coord2 = new SphericCoordinate(2, 3);
-        SphericCoordinate coord3 = new SphericCoordinate(5.0, 5.1);
-        SphericCoordinate coord4 = new SphericCoordinate(5.0, 5.1);
-        SphericCoordinate coord5 = new SphericCoordinate(2.3, 3.4);
+        SphericCoordinate coord0 = SphericCoordinate.getInstance(0, 1);
+        SphericCoordinate coord1 = SphericCoordinate.getInstance(0, 1);
+        SphericCoordinate coord2 = SphericCoordinate.getInstance(2, 3);
+        SphericCoordinate coord3 = SphericCoordinate.getInstance(5.0, 5.1);
+        SphericCoordinate coord4 = SphericCoordinate.getInstance(5.0, 5.1);
+        SphericCoordinate coord5 = SphericCoordinate.getInstance(2.3, 3.4);
 
         // Act + assert
         assertTrue(coord0.isEqual(coord0));
@@ -73,12 +73,12 @@ public class SphericCoordinateTest {
      */
     @Test
     public void testDistance() {
-        SphericCoordinate rüsselBahn = new SphericCoordinate(49.9917, 8.41321);
-        SphericCoordinate rüsselOpel = new SphericCoordinate(50.0049, 8.42182);
-        SphericCoordinate berlin = new SphericCoordinate(52.5164, 13.3777);
-        SphericCoordinate lissabon = new SphericCoordinate(38.692668, -9.177944);
+        SphericCoordinate ruesselBahn = SphericCoordinate.getInstance(49.9917, 8.41321);
+        SphericCoordinate ruesselOpel = SphericCoordinate.getInstance(50.0049, 8.42182);
+        SphericCoordinate berlin = SphericCoordinate.getInstance(52.5164, 13.3777);
+        SphericCoordinate lissabon = SphericCoordinate.getInstance(38.692668, -9.177944);
 
-        assertEquals(rüsselBahn.getSphericDistance(rüsselOpel), 1.593, 1e-2);
+        assertEquals(ruesselBahn.getSphericDistance(ruesselOpel), 1.593, 1e-2);
         assertEquals(berlin.getSphericDistance(lissabon), 2317.722, 3);
         assertEquals(berlin.getSphericDistance(berlin), 0.0, 0.0);
     }
@@ -88,11 +88,11 @@ public class SphericCoordinateTest {
      */
     @Test
     public void testConversion() {
-        SphericCoordinate rüsselBahn = new SphericCoordinate(49.9917, 8.41321);
-        CartesianCoordinate cart = rüsselBahn.asCartesianCoordinate();
+        SphericCoordinate ruesselBahn = SphericCoordinate.getInstance(49.9917, 8.41321);
+        CartesianCoordinate cart = ruesselBahn.asCartesianCoordinate();
         SphericCoordinate spheric = cart.asSphericCoordinate();
 
-        assertEquals(rüsselBahn.latitude, spheric.latitude, 1e-9);
-        assertEquals(rüsselBahn.longitude, spheric.longitude, 1e-9);
+        assertEquals(ruesselBahn.getLatitude(), spheric.getLatitude(), 1e-9);
+        assertEquals(ruesselBahn.getLongitude(), spheric.getLongitude(), 1e-9);
     }
 }

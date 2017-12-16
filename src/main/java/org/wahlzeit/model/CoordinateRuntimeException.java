@@ -21,7 +21,7 @@
 package org.wahlzeit.model;
 
 /**
- * Exception used to throw if any incorrect runtime errors occur in any Coordinate instances.
+ * Exception used to throw if any incorrect runtime errors occur in any Coordinate instance.
  */
 public class CoordinateRuntimeException extends RuntimeException {
 

@@ -25,6 +25,7 @@ import org.wahlzeit.utils.asserts.ObjectAssert;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Objects;
 
 public abstract class AbstractCoordinate implements Coordinate {
 
@@ -33,11 +34,6 @@ public abstract class AbstractCoordinate implements Coordinate {
      */
     public abstract CartesianCoordinate asCartesianCoordinate();
     public abstract SphericCoordinate asSphericCoordinate();
-
-    public abstract boolean isEqual(Coordinate coord);
-
-    public abstract int hashCode();
-
     protected abstract void assertClassInvariants();
 
     /**
@@ -98,7 +94,6 @@ public abstract class AbstractCoordinate implements Coordinate {
 
     /**
      * Will forward to isEqual if the given Object is a Coordinate.
-     * isEqual is implemented in the specific subclasses.
      * @param obj   Object to compare to
      * @return  true if obj is a Coordinate and the specific isEqual method is fulfilled.
      */
@@ -109,6 +104,38 @@ public abstract class AbstractCoordinate implements Coordinate {
             isEqual = this.isEqual((Coordinate) obj);
         }
         return isEqual;
+    }
+
+    /**
+     * Compare this coordinate with the given one.
+     * Does a null check but throws no exception.
+     * Both coordinates will be converted to a CartesianCoordinate
+     * both are equal if x, y and z are equal.
+     * @param coord    Coordinate to compare to
+     * @return  true if all attributes are equal
+     */
+    @Override
+    public boolean isEqual(Coordinate coord) {
+        boolean isEqual = false;
+        if (coord != null) {
+            CartesianCoordinate thisCart = this.asCartesianCoordinate();
+            CartesianCoordinate tmp = coord.asCartesianCoordinate();
+            isEqual = thisCart.getX() == tmp.getX()
+                   && thisCart.getY() == tmp.getY()
+                   && thisCart.getZ() == tmp.getZ();
+        }
+        return isEqual;
+    }
+
+    /**
+     * Convert this coordinate object to a CartesianCoordinate.
+     * Create hash code based on x, y and z.
+     * @return hash code
+     */
+    @Override
+    public int hashCode() {
+        CartesianCoordinate thisCart = this.asCartesianCoordinate();
+        return Objects.hash(thisCart.getX(), thisCart.getY(), thisCart.getZ());
     }
 
     /**

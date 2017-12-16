@@ -20,9 +20,7 @@
 
 package org.wahlzeit.model;
 
-import org.wahlzeit.utils.asserts.ObjectAssert;
-
-import java.util.Objects;
+import java.util.HashMap;
 
 /**
  * Class representing a cartesian coordinate with x, y, z axis.
@@ -34,16 +32,18 @@ import java.util.Objects;
 public class CartesianCoordinate extends AbstractCoordinate {
 
     /**
-     * Denotes the precision of (x + y + z) w.r.t. earth radius ({@link #EARTH_RADIUS}).
+     * Denotes the precision of sqrt(x^2 + y^2 + z^2) w.r.t. earth radius ({@link #EARTH_RADIUS}).
      */
-    public static final double EARTH_RADIUS_DELTA = Math.pow(10, -AbstractCoordinate.DELTA);
+    private static final double EARTH_RADIUS_DELTA = 1.5d;
+
+    private static final HashMap<Integer, CartesianCoordinate> instances = new HashMap<>();
 
     /**
      * Coordinates with precision of {@link #DELTA}.
      */
-    protected final double x;
-    protected final double y;
-    protected final double z;
+    private final double x;
+    private final double y;
+    private final double z;
 
     /**
      * Constructor. Will round x, y, z to {@link #DELTA} decimal places.
@@ -53,7 +53,7 @@ public class CartesianCoordinate extends AbstractCoordinate {
      * @param z coordinate
      * @throws CoordinateRuntimeException     check {@link #assertClassInvariants()}
      */
-    public CartesianCoordinate(double x, double y, double z) throws CoordinateRuntimeException {
+    private CartesianCoordinate(double x, double y, double z) throws CoordinateRuntimeException {
         this.x = AbstractCoordinate.round(x);
         this.y = AbstractCoordinate.round(y);
         this.z = AbstractCoordinate.round(z);
@@ -62,24 +62,33 @@ public class CartesianCoordinate extends AbstractCoordinate {
     }
 
     /**
-     * Copy Constructor. Does a null check.
-     * @param coord     Coordinate to copy.
-     * @throws IllegalArgumentException     If coord is null
+     * Create/ get value object with given x, y, z values.
+     * @param x coordinate
+     * @param y coordinate
+     * @param z coordinate
+     * @return  instance of CartesianCoordinate with desired x, y, z values
+     * @throws CoordinateRuntimeException   check {@link #assertClassInvariants()}
      */
-    public CartesianCoordinate(Coordinate coord) throws IllegalArgumentException {
-        ObjectAssert.assertNotNull(coord, "Coordinate is null!");
-
-        CartesianCoordinate tmp;
-        if(coord instanceof CartesianCoordinate) {
-            tmp = (CartesianCoordinate) coord;
+    public static CartesianCoordinate getInstance(double x, double y, double z) throws CoordinateRuntimeException {
+        CartesianCoordinate coord = new CartesianCoordinate(x, y, z);
+        synchronized (instances) {
+            if (!instances.containsValue(coord)) {
+                instances.put(coord.hashCode(), coord);
+            }
+            return instances.get(coord.hashCode());
         }
-        else {
-            tmp = coord.asCartesianCoordinate();
-        }
+    }
 
-        this.x = tmp.x;
-        this.y = tmp.y;
-        this.z = tmp.z;
+    public double getX() {
+        return this.x;
+    }
+
+    public double getY() {
+        return this.y;
+    }
+
+    public double getZ() {
+        return this.z;
     }
 
     /**
@@ -88,7 +97,7 @@ public class CartesianCoordinate extends AbstractCoordinate {
      */
     @Override
     public CartesianCoordinate asCartesianCoordinate() {
-        return new CartesianCoordinate(this);
+        return this;
     }
 
     /**
@@ -100,7 +109,7 @@ public class CartesianCoordinate extends AbstractCoordinate {
     public SphericCoordinate asSphericCoordinate() {
         double latitude = Math.toDegrees(Math.acos(this.z / SphericCoordinate.EARTH_RADIUS));
         double longitude = Math.toDegrees(Math.atan2(this.y, this.x));
-        return new SphericCoordinate(latitude, longitude);
+        return SphericCoordinate.getInstance(latitude, longitude);
     }
 
     /**
@@ -117,41 +126,13 @@ public class CartesianCoordinate extends AbstractCoordinate {
     }
 
     /**
-     * Compare this coordinate with the given one.
-     * Does a null check. But throws no exception.
-     * Coordinates are equal if all attributes are equal.
-     * @param coord    Coordinate to compare to
-     * @return  true if all attributes are equal
-     */
-    @Override
-    public boolean isEqual(Coordinate coord) {
-        boolean isEqual = false;
-        if (coord != null) {
-            CartesianCoordinate tmp = coord.asCartesianCoordinate();
-            isEqual = this.x == tmp.x
-                   && this.y == tmp.y
-                   && this.z == tmp.z;
-        }
-        return isEqual;
-    }
-
-    /**
-     * Create hash code based on attributes.
-     * @return hash code
-     */
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.x, this.y, this.z);
-    }
-
-    /**
      * Throw exception if (this) x, y, z do not lie on the earths radius. With precision of {@link #EARTH_RADIUS_DELTA}
-     * @throws CoordinateRuntimeException    if (x + y + z) != ({@link #EARTH_RADIUS} +- {@link #EARTH_RADIUS_DELTA})
+     * @throws CoordinateRuntimeException    if sqrt(x^2 + y^2 + z^2) != ({@link #EARTH_RADIUS} +- {@link #EARTH_RADIUS_DELTA})
      */
     @Override
     protected void assertClassInvariants() throws CoordinateRuntimeException {
-        if (Math.abs((this.x + this.y + this.z) - AbstractCoordinate.EARTH_RADIUS)
-                <= CartesianCoordinate.EARTH_RADIUS_DELTA) {
+        double radius = Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2) + Math.pow(this.z, 2));
+        if (Math.abs(radius - AbstractCoordinate.EARTH_RADIUS) > CartesianCoordinate.EARTH_RADIUS_DELTA) {
             throw new CoordinateRuntimeException("Invalid axes values! Coordinate does not lie on the earths radius.");
         }
     }

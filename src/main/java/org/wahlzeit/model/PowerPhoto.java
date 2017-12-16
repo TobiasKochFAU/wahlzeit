@@ -25,8 +25,14 @@ import org.wahlzeit.utils.asserts.DoubleAssert;
 import org.wahlzeit.utils.asserts.IntegerAssert;
 import org.wahlzeit.utils.asserts.ObjectAssert;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 @Subclass
 public class PowerPhoto extends Photo {
+
+
+    private static final Logger log = Logger.getLogger(PowerPhoto.class.getName());
 
     /**
      * attributes to describe a power plant
@@ -63,7 +69,7 @@ public class PowerPhoto extends Photo {
         }
         catch (IllegalArgumentException exc) {
             // do nothing, keep old value
-            // could write to log or something
+            log.log(Level.WARNING, exc.getMessage());
         }
     }
 
@@ -87,7 +93,7 @@ public class PowerPhoto extends Photo {
         }
         catch (IllegalArgumentException exc) {
             // do nothing, keep old value
-            // could write to log or something
+            log.log(Level.WARNING, exc.getMessage());
         }
     }
 
@@ -111,7 +117,7 @@ public class PowerPhoto extends Photo {
         }
         catch (IllegalArgumentException exc) {
             // do nothing, keep old value
-            // could write to log or something
+            log.log(Level.WARNING, exc.getMessage());
         }
     }
 
@@ -139,7 +145,7 @@ public class PowerPhoto extends Photo {
         }
         catch (IllegalArgumentException exc) {
             // do nothing, keep old values
-            // could write to log or something
+            log.log(Level.WARNING, exc.getMessage());
         }
     }
 

@@ -12,9 +12,10 @@ public class LocationTest {
     @Test
     public void testMember() {
         // Arrange
-        CartesianCoordinate coord0 = new CartesianCoordinate(0, 1, 2);
-        CartesianCoordinate coord1 = new CartesianCoordinate(0, 1, 2);
-        CartesianCoordinate coord2 = new CartesianCoordinate(2, 3, 4);
+        double thirdRadius = Math.sqrt(Math.pow(AbstractCoordinate.EARTH_RADIUS, 2) / 3.0d);
+        CartesianCoordinate coord0 = CartesianCoordinate.getInstance(thirdRadius, thirdRadius, thirdRadius);
+        CartesianCoordinate coord1 = CartesianCoordinate.getInstance(thirdRadius, thirdRadius, thirdRadius);
+        CartesianCoordinate coord2 = CartesianCoordinate.getInstance(thirdRadius + 1, thirdRadius - 1, thirdRadius);
         Location loc0 = new Location(coord0);
         Location loc1 = new Location(coord1);
         Location loc2 = new Location(coord2);
@@ -22,9 +23,9 @@ public class LocationTest {
         // Act + assert
         // Pointer check
         assertTrue(loc0.coordinate == coord0);
-        assertTrue(loc0.coordinate != coord1);
+        assertTrue(loc0.coordinate == coord1);
         assertTrue(loc1.coordinate == coord1);
-        assertTrue(loc1.coordinate != coord0);  // always true
+        assertTrue(loc1.coordinate == coord0);  // always true
         assertTrue(loc2.coordinate == coord2);
         assertTrue(loc2.coordinate != coord1);
 

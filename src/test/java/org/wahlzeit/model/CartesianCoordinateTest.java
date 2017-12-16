@@ -6,21 +6,21 @@ import static org.junit.Assert.*;
 
 public class CartesianCoordinateTest {
 
-    double thirdRadius = 0;
-    CartesianCoordinate coord0 = null;
-    CartesianCoordinate coord1 = null;
-    CartesianCoordinate coord2 = null;
-    CartesianCoordinate coord3 = null;
-    CartesianCoordinate coord4 = null;
+    private double thirdRadius = 0;
+    private CartesianCoordinate coord0 = null;
+    private CartesianCoordinate coord1 = null;
+    private CartesianCoordinate coord2 = null;
+    private CartesianCoordinate coord3 = null;
+    private CartesianCoordinate coord4 = null;
 
     @Before
     public void arrange() {
-        thirdRadius = AbstractCoordinate.EARTH_RADIUS / 3.0d;
-        coord0 = new CartesianCoordinate(thirdRadius, thirdRadius, thirdRadius);
-        coord1 = new CartesianCoordinate(thirdRadius, thirdRadius, thirdRadius);
-        coord2 = new CartesianCoordinate(thirdRadius + 1, thirdRadius - 1, thirdRadius);
-        coord3 = new CartesianCoordinate(thirdRadius + 5.0, thirdRadius - 2, thirdRadius - 3);
-        coord4 = new CartesianCoordinate(thirdRadius - 100, thirdRadius + 50, thirdRadius + 50);
+        thirdRadius = Math.sqrt(Math.pow(AbstractCoordinate.EARTH_RADIUS, 2) / 3.0d);
+        coord0 = CartesianCoordinate.getInstance(thirdRadius, thirdRadius, thirdRadius);
+        coord1 = CartesianCoordinate.getInstance(thirdRadius, thirdRadius, thirdRadius);
+        coord2 = CartesianCoordinate.getInstance(thirdRadius + 1, thirdRadius - 1, thirdRadius);
+        coord3 = CartesianCoordinate.getInstance(thirdRadius + 5.0, thirdRadius - 2, thirdRadius - 3);
+        coord4 = CartesianCoordinate.getInstance(thirdRadius - 100, thirdRadius + 50, thirdRadius + 50);
     }
 
     /**

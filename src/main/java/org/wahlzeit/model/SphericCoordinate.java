@@ -20,10 +20,7 @@
 
 package org.wahlzeit.model;
 
-
-import org.wahlzeit.utils.asserts.ObjectAssert;
-
-import java.util.Objects;
+import java.util.HashMap;
 
 /**
  * Class representing a spherical coordinate with latitude and longitude in degree.
@@ -34,11 +31,13 @@ import java.util.Objects;
  */
 public class SphericCoordinate extends AbstractCoordinate {
 
+    private static final HashMap<Integer, SphericCoordinate> instances = new HashMap<>();
+
     /**
      * Coordinates with precision of {@link #DELTA} in degree.
      */
-    protected final double latitude;
-    protected final double longitude;
+    private final double latitude;
+    private final double longitude;
 
     /**
      * Constructor. Will round latitude and longitude to {@link #DELTA} decimals.
@@ -47,7 +46,7 @@ public class SphericCoordinate extends AbstractCoordinate {
      * @param longitude     longitude coordinate
      * @throws CoordinateRuntimeException     check {@link #assertClassInvariants()}
      */
-    public SphericCoordinate(double latitude, double longitude) throws CoordinateRuntimeException {
+    private SphericCoordinate(double latitude, double longitude) throws CoordinateRuntimeException {
         this.latitude = AbstractCoordinate.round(latitude);
         this.longitude = AbstractCoordinate.round(longitude);
 
@@ -55,23 +54,28 @@ public class SphericCoordinate extends AbstractCoordinate {
     }
 
     /**
-     * Copy constructor. Does a null check.
-     * @param coord     Coordinate to copy.
-     * @throws IllegalArgumentException     If coord is null
+     * Create/ get value object with given latitude and longitude values.
+     * @param latitude  latitude coordinate
+     * @param longitude     longitude coordinate
+     * @return  instance of CartesianCoordinate with desired x, y, z values
+     * @throws CoordinateRuntimeException   check {@link #assertClassInvariants()}
      */
-    public SphericCoordinate(Coordinate coord) throws IllegalArgumentException {
-        ObjectAssert.assertNotNull(coord, "Coordinate is null!");
-
-        SphericCoordinate tmp;
-        if(coord instanceof SphericCoordinate) {
-            tmp = (SphericCoordinate) coord;
+    public static SphericCoordinate getInstance(double latitude, double longitude) throws CoordinateRuntimeException {
+        SphericCoordinate coord = new SphericCoordinate(latitude, longitude);
+        synchronized (instances) {
+            if (!instances.containsValue(coord)) {
+                instances.put(coord.hashCode(), coord);
+            }
+            return instances.get(coord.hashCode());
         }
-        else {
-            tmp = coord.asSphericCoordinate();
-        }
+    }
 
-        this.latitude = tmp.latitude;
-        this.longitude = tmp.longitude;
+    public double getLatitude() {
+        return this.latitude;
+    }
+
+    public double getLongitude() {
+        return this.longitude;
     }
 
     /**
@@ -80,7 +84,7 @@ public class SphericCoordinate extends AbstractCoordinate {
      */
     @Override
     public SphericCoordinate asSphericCoordinate() {
-        return new SphericCoordinate(this);
+        return this;
     }
 
     /**
@@ -98,7 +102,7 @@ public class SphericCoordinate extends AbstractCoordinate {
         double y = rMulSinLat * Math.sin(radLong);
         double z = SphericCoordinate.EARTH_RADIUS * Math.cos(radLat);
 
-        return new CartesianCoordinate(x, y, z);
+        return CartesianCoordinate.getInstance(x, y, z);
     }
 
     /**
@@ -132,33 +136,6 @@ public class SphericCoordinate extends AbstractCoordinate {
 
         double denominator = (sinLat1 * sinLat2) + (cosLat1 * cosLat2 * cosDeltaLong);
         return AbstractCoordinate.round(SphericCoordinate.EARTH_RADIUS * Math.atan2(numerator, denominator));
-    }
-
-    /**
-     * Compare this coordinate with the given one.
-     * Does a null check. But throws no exception.
-     * Coordinates are equal if all attributes are equal.
-     * @param coord    Coordinate to compare to
-     * @return  true if all attributes are equal
-     */
-    @Override
-    public boolean isEqual(Coordinate coord) {
-        boolean isEqual = false;
-        if (coord != null) {
-            SphericCoordinate tmp = coord.asSphericCoordinate();
-            isEqual = this.latitude == tmp.latitude
-                   && this.longitude == tmp.longitude;
-        }
-        return isEqual;
-    }
-
-    /**
-     * Create hash code based on attributes.
-     * @return hash code
-     */
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.latitude, this.longitude);
     }
 
     /**
