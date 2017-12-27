@@ -21,6 +21,7 @@
 package org.wahlzeit.model;
 
 import org.wahlzeit.services.LogBuilder;
+import org.wahlzeit.utils.DesignPattern;
 import org.wahlzeit.utils.asserts.ObjectAssert;
 
 import java.util.logging.Logger;
@@ -28,6 +29,10 @@ import java.util.logging.Logger;
 /**
  * A Factory for creating PowerPhotos and related objects.
  */
+@DesignPattern(
+        name = "Abstract Factory",
+        participants = {"ConcreteFactory"}
+)
 public class PowerPhotoFactory extends PhotoFactory {
 
     private static final Logger log = Logger.getLogger(PowerPhotoFactory.class.getName());

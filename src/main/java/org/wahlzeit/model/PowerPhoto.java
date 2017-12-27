@@ -21,6 +21,7 @@
 package org.wahlzeit.model;
 
 import com.googlecode.objectify.annotation.Subclass;
+import org.wahlzeit.utils.DesignPattern;
 import org.wahlzeit.utils.asserts.DoubleAssert;
 import org.wahlzeit.utils.asserts.IntegerAssert;
 import org.wahlzeit.utils.asserts.ObjectAssert;
@@ -28,6 +29,10 @@ import org.wahlzeit.utils.asserts.ObjectAssert;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@DesignPattern(
+        name = "Abstract Factory",
+        participants = {"ConcreteProduct"}
+)
 @Subclass
 public class PowerPhoto extends Photo {
 

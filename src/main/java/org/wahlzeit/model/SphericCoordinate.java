@@ -20,6 +20,8 @@
 
 package org.wahlzeit.model;
 
+import org.wahlzeit.utils.DesignPattern;
+
 import java.util.HashMap;
 
 /**
@@ -29,6 +31,10 @@ import java.util.HashMap;
  *
  * @author Tobias Koch
  */
+@DesignPattern(
+        name = "Value Object",
+        participants = {"ValueObject"}
+)
 public class SphericCoordinate extends AbstractCoordinate {
 
     private static final HashMap<Integer, SphericCoordinate> instances = new HashMap<>();
