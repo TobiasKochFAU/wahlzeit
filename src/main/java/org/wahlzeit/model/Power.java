@@ -34,7 +34,7 @@ import java.util.logging.Logger;
 public class Power {
 
     @Id
-    private String name = "";
+    private final String name;
 
     private PowerType powerType;
     private int yearStartUp = 0;
@@ -43,7 +43,8 @@ public class Power {
 
     private static final Logger log = Logger.getLogger(PowerPhoto.class.getName());
 
-    public Power(PowerType powerType) {
+    public Power(String name, PowerType powerType) {
+        this.name = name;
         this.powerType = powerType;
     }
 
@@ -80,20 +81,20 @@ public class Power {
      * do nothing as this does not lead to an enormous invalid program state.
      * @param name  name to set
      */
-    public void setName(String name) {
-        try {
-            ObjectAssert.assertNotNull(name, "Name is null!");
-            this.doSetName(name);
-        }
-        catch (IllegalArgumentException exc) {
-            // do nothing, keep old value
-            log.log(Level.WARNING, exc.getMessage());
-        }
-    }
-
-    private void doSetName(String name) {
-        this.name = name;
-    }
+//    public void setName(String name) {
+//        try {
+//            ObjectAssert.assertNotNull(name, "Name is null!");
+//            this.doSetName(name);
+//        }
+//        catch (IllegalArgumentException exc) {
+//            // do nothing, keep old value
+//            log.log(Level.WARNING, exc.getMessage());
+//        }
+//    }
+//
+//    private void doSetName(String name) {
+//        this.name = name;
+//    }
 
     public int getYearStartUp() {
         return yearStartUp;

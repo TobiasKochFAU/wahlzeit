@@ -52,8 +52,8 @@ public class PowerType {
         return this.typeName;
     }
 
-    public Power createPower() {
-        return new Power(this);
+    public Power createPower(String powerName) {
+        return new Power(powerName, this);
     }
 
     public static PowerType getPowerType(String typeName) {

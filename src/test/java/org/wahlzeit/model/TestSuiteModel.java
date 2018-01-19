@@ -15,6 +15,7 @@ import org.wahlzeit.model.persistence.TestSuitePersistence;
         GuestTest.class,
         LocationTest.class,
         PhotoFilterTest.class,
+        PowerManagerTest.class,
         PowerPhotoFactoryTest.class,
         PowerPhotoManagerTest.class,
         PowerPhotoTest.class,

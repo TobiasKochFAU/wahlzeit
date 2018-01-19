@@ -29,7 +29,7 @@ public class PowerManager {
     // Singleton
     private static final PowerManager instance = new PowerManager();
 
-    private static final HashMap<Integer, Power> powerInstances = new HashMap<>();
+    private static final HashMap<String, Power> powerInstances = new HashMap<>();
 
     private PowerManager() {
         // do nothing
@@ -40,11 +40,19 @@ public class PowerManager {
         return PowerManager.instance;
     }
 
-    public Power createPower(String typeName) {
-        ObjectAssert.assertNotNull(typeName, "Type name is null!");
-        PowerType powerType = PowerType.getPowerType(typeName);
-        Power power = powerType.createPower();
-        PowerManager.powerInstances.put(power.hashCode(), power);
-        return power;
+    public Power createPower(String powerName, String powerStrType) {
+        ObjectAssert.assertNotNull(powerName, "Power name is null!");
+        ObjectAssert.assertNotNull(powerStrType, "Power type is null!");
+
+        PowerType powerType = PowerType.getPowerType(powerStrType);
+
+        synchronized (PowerManager.powerInstances) {
+            if (!PowerManager.powerInstances.containsKey(powerName)) {
+                Power power = powerType.createPower(powerName);
+                PowerManager.powerInstances.put(powerName, power);
+            }
+        }
+
+        return PowerManager.powerInstances.get(powerName);
     }
 }

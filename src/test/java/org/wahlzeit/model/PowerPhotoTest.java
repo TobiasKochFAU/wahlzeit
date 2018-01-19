@@ -42,18 +42,18 @@ public class PowerPhotoTest {
     @Rule
     public final ExpectedException expectedException = ExpectedException.none();
 
+    PowerPhotoFactory ppf = PowerPhotoFactory.getInstance();
     private PowerPhoto p1 = null;
 
     @Before
     public void arrange() {
         PowerManager pm = PowerManager.getInstace();
 
-        Power beer1 = pm.createPower("beer");
-        beer1.setName("plant1");
+        Power beer1 = pm.createPower("plant1", "beer");
         beer1.setYearStartUp(2012);
         beer1.setCapacitySinceStart(5.2d, 2017);
 
-        p1 = new PowerPhoto();
+        p1 = ppf.createPhoto();
         p1.setPower(beer1);
     }
 
@@ -64,21 +64,19 @@ public class PowerPhotoTest {
     public void testAttributes() {
         PowerManager pm = PowerManager.getInstace();
 
-        Power beer2 = pm.createPower("beer");
-        beer2.setName("plant2");
+        Power beer2 = pm.createPower("plant2", "beer");
         beer2.setYearStartUp(2014);
         beer2.setCapacitySinceStart(2.5d, 2017);
 
         PhotoId id = new PhotoId(1337);
-        PowerPhoto p2 = new PowerPhoto(id);
+        PowerPhoto p2 = ppf.createPhoto(id);
         p2.setPower(beer2);
 
-        Power wine = pm.createPower("wine");
-        wine.setName("plant3");
+        Power wine = pm.createPower("plant3", "wine");
         wine.setYearStartUp(2014);
         wine.setCapacitySinceStart(42.42d, 2042);
 
-        PowerPhoto p3 = new PowerPhoto(id);
+        PowerPhoto p3 = ppf.createPhoto(id);
         p3.setPower(wine);
 
         assertNotEquals(p1.getId(), p2.getId());
@@ -109,8 +107,5 @@ public class PowerPhotoTest {
         p1.getPower().setCapacitySinceStart(2.4, 2011);
         assertEquals(p1.getPower().getCapacitySinceStart(), 7.3, 0.0d);
         assertEquals(p1.getPower().getYearCapacity(), 2018);
-
-        p1.getPower().setName(null);
-        assertEquals(p1.getPower().getName(), "plant1");
     }
 }
