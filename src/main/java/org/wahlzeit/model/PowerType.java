@@ -20,20 +20,28 @@
 
 package org.wahlzeit.model;
 
+import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.Serialize;
 import org.wahlzeit.utils.asserts.ObjectAssert;
 
 import java.util.*;
 
+@Entity
 public class PowerType {
+
+    // Power types, e.g. nuclear, wind, etc...
+    @Id
+    private final String typeName;
 
     // Used value object pattern.
     private static final Hashtable<Integer, PowerType> instances = new Hashtable<>();
 
-    // Power types, e.g. nuclear, wind, etc...
-    private final String typeName;
+    @Serialize
+    private PowerType superType = null;
 
-//    private PowerType superType = null;
-//    private Set<PowerType> subTypes = new HashSet<>();
+    @Serialize
+    private Set<PowerType> subTypes = new HashSet<>();
 
     private PowerType(String typeName) {
         ObjectAssert.assertNotNull(typeName, "Type name is null!");
@@ -62,23 +70,23 @@ public class PowerType {
         return PowerType.instances.get(hashCode);
     }
 
-//    public PowerType getSuperType() {
-//        return this.superType;
-//    }
-//
-//    public void setSuperType(PowerType superType) {
-//        this.superType = superType;
-//    }
-//
-//    public void addSubType(PowerType powerType) {
-//        ObjectAssert.assertNotNull(powerType, "Power type is null!");
-//        powerType.setSuperType(this);
-//        this.subTypes.add(powerType);
-//    }
-//
-//    public boolean isSubtype() {
-//        return this.superType != null;
-//    }
+    public PowerType getSuperType() {
+        return this.superType;
+    }
+
+    public void setSuperType(PowerType superType) {
+        this.superType = superType;
+    }
+
+    public void addSubType(PowerType powerType) {
+        ObjectAssert.assertNotNull(powerType, "Power type is null!");
+        powerType.setSuperType(this);
+        this.subTypes.add(powerType);
+    }
+
+    public boolean isSubtype() {
+        return this.superType != null;
+    }
 
     @Override
     public boolean equals(Object obj)
@@ -86,15 +94,21 @@ public class PowerType {
         boolean isEqual = false;
         if (obj instanceof PowerType) {
             PowerType other = (PowerType) obj;
-            isEqual = this.typeName.equals(other.typeName);
-//                   && this.superType.equals(other.superType)
-//                   && this.subTypes.equals(other.subTypes);
+            if (this.superType != null) {
+                isEqual = this.typeName.equals(other.typeName)
+                        && this.superType.equals(other.superType)
+                        && this.subTypes.equals(other.subTypes);
+            }
+            else if (other.superType == null) {
+                isEqual = this.typeName.equals(other.typeName)
+                        && this.subTypes.equals(other.subTypes);
+            }
         }
         return isEqual;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.typeName);//, this.superType, this.subTypes);
+        return Objects.hash(this.typeName, this.superType, this.subTypes);
     }
 }

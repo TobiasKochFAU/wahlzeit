@@ -20,14 +20,13 @@
 
 package org.wahlzeit.model;
 
-import org.wahlzeit.services.ObjectManager;
 import org.wahlzeit.utils.asserts.ObjectAssert;
 
 import java.util.HashMap;
 
 public class PowerManager {
 
-    // Singleton access
+    // Singleton
     private static final PowerManager instance = new PowerManager();
 
     private static final HashMap<Integer, Power> powerInstances = new HashMap<>();

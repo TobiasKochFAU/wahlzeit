@@ -20,6 +20,8 @@
 
 package org.wahlzeit.model;
 
+import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Id;
 import org.wahlzeit.utils.asserts.DoubleAssert;
 import org.wahlzeit.utils.asserts.IntegerAssert;
 import org.wahlzeit.utils.asserts.ObjectAssert;
@@ -28,10 +30,13 @@ import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@Entity
 public class Power {
 
-    private PowerType powerType;
+    @Id
     private String name = "";
+
+    private PowerType powerType;
     private int yearStartUp = 0;
     private double capacitySinceStart = 0.0d; // in GWh, capacity gained till year yearCapacity
     private int yearCapacity = 0; // the year until the capacity was measured
